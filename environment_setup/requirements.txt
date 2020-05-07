@@ -1,13 +1,12 @@
-numpy=1.18.*
-pandas=1.0.*
-scikit-learn=0.22.*
-dependencies for MLOps with R.
-pip=20.0.*
-azureml-sdk==1.3.*
-pytest==5.4.*
-pytest-cov==2.8.*
-requests==2.23.*
-python-dotenv==0.12.*
-flake8==3.7.*
-flake8_formatter_junit_xml==0.0.*
-azure-cli==2.3.*
+numpy=1.16.4
+pandas=1.0.3
+scikit-learn=0.22.2
+pip=20.1
+azureml-sdk==1.3.0
+pytest==5.4.0
+pytest-cov==2.8.0
+requests==2.23.0
+python-dotenv==0.12.0
+flake8==3.7.0
+flake8_formatter_junit_xml==0.0.6
+azure-cli==2.5
