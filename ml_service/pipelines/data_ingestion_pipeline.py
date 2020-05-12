@@ -1,15 +1,23 @@
-from azureml.core import Workspace, Dataset, Datastore
-from azureml.core.runconfig import RunConfiguration
-from ml_service.util.env_variables import Env
-from kaggle_titanic.data_ingestion import data_creation
-from ast import literal_eval
+# Environment related utilities
 import os
+from ml_service.util.env_variables import Env
+
+# Azure core ML modules
+from azureml.core import Workspace, Dataset, Datastore
+
+# Data Ingestion related
+from kaggle_titanic.data_ingestion import data_creation
+
+# Other utilities
+from ast import literal_eval
 
 
 def main():
+
     # Loading environment variables
     e = Env()
 
+    # Connect to AML workspace using credentials
     aml_workspace = Workspace.get(
         name=e.workspace_name,
         subscription_id=e.subscription_id,
@@ -35,11 +43,11 @@ def main():
     if ds_unavailable or rerun_data_ingest:
 
         if ds_unavailable:
-            print(f"Dataset {dataset_name} unavailable on datastore {datastore_name};\n"
+            print(f"Dataset {dataset_name} unavailable on datastore {datastore_name}\n"
                   f"Dataset Creation and Registration triggered for the first time")
         else:
-            print(f"Dataset {dataset_name} already exists on datastore {datastore_name};\n"
-                  f"Dataset Creation and Registration triggered due to change in data ingestion process")
+            print(f"Dataset {dataset_name} already exists on datastore {datastore_name}\n"
+                  f"Dataset Creation and Registration triggered due to change in data or code base")
 
         # Pull Data from SQL or CSV and save it to local
         req_data = data_creation()
@@ -82,7 +90,7 @@ def main():
             print(ex)
     else:
         print(f"Dataset {dataset_name} is already available on datastore {datastore_name}\n"
-              f"No data ingestion was performed during the run")
+              f"No Dataset Creation and Registration was performed during the run")
 
 
 if __name__ == '__main__':

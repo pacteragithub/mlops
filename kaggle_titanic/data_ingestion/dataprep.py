@@ -1,8 +1,8 @@
 
+import os
 from .clean_helpers import convert_to_datetime
 from pandas import read_csv
-from dotenv import load_dotenv
-import os
+from ml_service.util.env_variables import Env
 
 
 def data_creation():
@@ -12,7 +12,7 @@ def data_creation():
     Output : DataFrame which will be further used for modeling
     """
     # Block to read environment variables
-    load_dotenv()
+    e = Env()
 
     # Connection to Database
 
@@ -21,9 +21,9 @@ def data_creation():
     # Finalize the dataset
 
     # Dummy code to test if .csv ingestion works
-    data_folder_dir = os.environ.get(["INGESTED_DATA_DIR"])
-    ingest_data_filename = os.environ.get(["INGESTED_DATA_FILENAME"])
-    data_file_path = data_folder_dir + "/" + ingest_data_filename + ".csv"
+    data_folder_dir = "./data"
+    raw_data_filename = "titanic_dataset"
+    data_file_path = data_folder_dir + "/" + raw_data_filename + ".csv"
 
     # Read the csv
     req_data = read_csv(data_file_path)

@@ -18,8 +18,8 @@ class Env(Singleton):
 
         # Project Directory variables
         self._sources_directory_train = os.environ.get("SOURCES_DIR_TRAIN")
-        self._ingested_data_directory = os.environ.get("INGESTED_DATA_DIR")
-        self._ingested_data_filename = os.environ.get("INGESTED_DATA_FILENAME")
+        self._ingested_data_directory = os.environ.get("SAVE_INGESTED_DATA_DIR")
+        self._ingested_data_filename = os.environ.get("SAVE_INGESTED_DATA_FILENAME")
         self._fresh_data_ingest = os.environ.get("FRESH_DATA_INGEST")
 
         # Model Output variables
