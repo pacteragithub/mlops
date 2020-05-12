@@ -2,6 +2,7 @@ from azureml.core import Workspace, Dataset, Datastore
 from azureml.core.runconfig import RunConfiguration
 from ml_service.util.env_variables import Env
 from kaggle_titanic.data_ingestion import data_creation
+from ast import literal_eval
 import os
 
 
@@ -27,8 +28,18 @@ def main():
     dataset_name = e.dataset_name
 
     # Check if the dataset exists in the aml workspace
+    ds_unavailable = dataset_name not in aml_workspace.datasets
+    rerun_data_ingest = literal_eval(e.fresh_data_ingest)
+
     # If dataset is not already registered or fresh data ingest flag rerun dataset creation
-    if (dataset_name not in aml_workspace.datasets) or e.fresh_data_ingest:
+    if ds_unavailable or rerun_data_ingest:
+
+        if ds_unavailable:
+            print(f"Dataset {dataset_name} unavailable on datastore {datastore_name};\n"
+                  f"Dataset Creation and Registration triggered for the first time")
+        else:
+            print(f"Dataset {dataset_name} already exists on datastore {datastore_name};\n"
+                  f"Dataset Creation and Registration triggered due to change in data ingestion process")
 
         # Pull Data from SQL or CSV and save it to local
         req_data = data_creation()
@@ -69,6 +80,9 @@ def main():
 
         except Exception as ex:
             print(ex)
+    else:
+        print(f"Dataset {dataset_name} is already available on datastore {datastore_name}\n"
+              f"No data ingestion was performed during the run")
 
 
 if __name__ == '__main__':
