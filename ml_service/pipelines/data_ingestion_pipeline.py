@@ -1,9 +1,6 @@
 # Environment related utilities
 import os
-
-print(os.path.abspath(os.curdir))
-
-from env_variables import DATASTORE_NAME, FRESH_DATA_INGEST, SAVE_INGESTED_DATA_DIR, PATH_ON_DATASTORE
+from environment_setup.env_variables import DATASTORE_NAME, FRESH_DATA_INGEST, SAVE_INGESTED_DATA_DIR, PATH_ON_DATASTORE
 
 # Azure core ML modules
 from azureml.core import Workspace

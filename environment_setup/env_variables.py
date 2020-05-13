@@ -2,8 +2,8 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+dotenv_path = join(os.path.abspath(os.curdir), '.env')
+load_dotenv()
 
 # Folder related environment variables
 SOURCES_DIR_TRAIN = os.environ.get('SOURCES_DIR_TRAIN')
