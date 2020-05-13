@@ -17,15 +17,15 @@ from datetime import datetime
 def main():
 
     # Loading environment variables
-    WORKSPACE_NAME = os.environ.get('WORKSPACE_NAME')
-    SUBSCRIPTION_ID = os.environ.get('SUBSCRIPTION_ID')
-    RESOURCE_GROUP = os.environ.get('RESOURCE_GROUP')
+    workspace_name = os.environ.get('AML_WORKSPACE_NAME')
+    subscription_id = os.environ.get('SUBSCRIPTION_ID')
+    resource_group = os.environ.get('RESOURCE_GROUP')
 
     # Connect to AML workspace using credentials
     aml_workspace = Workspace.get(
-        name=WORKSPACE_NAME,
-        subscription_id=SUBSCRIPTION_ID,
-        resource_group=RESOURCE_GROUP
+        name=workspace_name,
+        subscription_id=subscription_id,
+        resource_group=resource_group
     )
     print("get_workspace:")
     print(aml_workspace)
