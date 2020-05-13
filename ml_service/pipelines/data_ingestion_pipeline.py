@@ -53,7 +53,7 @@ def main():
         req_data = data_preparation()
 
         # Filename of the complete path
-        comp_file_path = e.ingested_data_directory + "/" + e.ingested_data_filename + ".csv"
+        comp_file_path = e.ingested_data_directory + "/" + e.ingested_data_filename
 
         # Write to csv
         req_data.to_csv(comp_file_path)
