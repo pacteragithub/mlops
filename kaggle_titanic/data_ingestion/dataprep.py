@@ -5,7 +5,7 @@ from pandas import read_csv
 from ml_service.util.env_variables import Env
 
 
-def data_creation():
+def data_preparation():
     """
     This function would be used for data ingestion pipeline
     Inputs : Load necessary environment variables for connecting to database, other config variables etc.,

@@ -6,7 +6,7 @@ from ml_service.util.env_variables import Env
 from azureml.core import Workspace, Dataset, Datastore
 
 # Data Ingestion related
-from kaggle_titanic.data_ingestion import data_creation
+from kaggle_titanic.data_ingestion import data_preparation
 
 # Other utilities
 from ast import literal_eval
@@ -50,7 +50,7 @@ def main():
                   f"Dataset Creation and Registration triggered due to change in data or code base")
 
         # Pull Data from SQL or CSV and save it to local
-        req_data = data_creation()
+        req_data = data_preparation()
 
         # Filename of the complete path
         comp_file_path = e.ingested_data_directory + "/" + e.ingested_data_filename + ".csv"
