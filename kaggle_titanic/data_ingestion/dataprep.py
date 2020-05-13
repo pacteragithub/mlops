@@ -9,7 +9,7 @@ def data_preparation():
     """
     This function would be used for data ingestion pipeline
     Inputs : Load necessary environment variables for connecting to database, other config variables etc.,
-    Output : DataFrame which will be further used for modeling
+    Output : Dictionary of DataFrames with keys as dataset names which will be further used for modeling
     """
     # Block to read environment variables
     e = Env()
@@ -28,4 +28,11 @@ def data_preparation():
     # Read the csv
     req_data = read_csv(data_file_path)
 
-    return req_data
+    # Initialize a dictionary to store dataframe objects with names
+    data_dict = {}
+
+    # Add key value pairs to the dictionary
+    data_dict["passenger_data"] = req_data
+    data_dict["transaction_data"] = req_data
+
+    return data_dict
