@@ -33,6 +33,7 @@ class Env(Singleton):
 
         # Datastore related information
         self._datastore_name = os.environ.get("DATASTORE_NAME")
+        self._path_on_datastore = os.environ.get("PATH_ON_DATASTORE")
         self._dataset_name = os.environ.get("DATASET_NAME")
         self._dataset_version = os.environ.get("DATASET_VERSION")
 
@@ -171,6 +172,10 @@ class Env(Singleton):
     @property
     def datastore_name(self):
         return self._datastore_name
+
+    @property
+    def path_on_datastore(self):
+        return self._path_on_datastore
 
     @property
     def dataset_version(self):

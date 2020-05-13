@@ -63,7 +63,7 @@ def main():
         aml_datastore = Datastore.get(aml_workspace, datastore_name=datastore_name)
 
         # Target path on the datastore where the data should be saved
-        target_path = "training_data/"
+        target_path = e.path_on_datastore
 
         # Upload files to datastore in workspace
         aml_datastore.upload_files(files=[comp_file_path],  # Upload the titanic csv files in /data
