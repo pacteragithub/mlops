@@ -1,9 +1,9 @@
 # Environment related utilities
 import os
-from ml_service.util.env_variables import Env
+from env_variables import DATASTORE_NAME, FRESH_DATA_INGEST, SAVE_INGESTED_DATA_DIR, PATH_ON_DATASTORE
 
 # Azure core ML modules
-from azureml.core import Workspace, Dataset, Datastore
+from azureml.core import Workspace
 
 # Data Ingestion related
 from kaggle_titanic.data_ingestion import data_preparation
@@ -17,31 +17,33 @@ from datetime import datetime
 def main():
 
     # Loading environment variables
-    e = Env()
+    WORKSPACE_NAME = os.environ.get('WORKSPACE_NAME')
+    SUBSCRIPTION_ID = os.environ.get('SUBSCRIPTION_ID')
+    RESOURCE_GROUP = os.environ.get('RESOURCE_GROUP')
 
     # Connect to AML workspace using credentials
     aml_workspace = Workspace.get(
-        name=e.workspace_name,
-        subscription_id=e.subscription_id,
-        resource_group=e.resource_group
+        name=WORKSPACE_NAME,
+        subscription_id=SUBSCRIPTION_ID,
+        resource_group=RESOURCE_GROUP
     )
     print("get_workspace:")
     print(aml_workspace)
 
     # Check if the datastore environment variable is valid or not
-    if (e.datastore_name): # if valid name assign it
-        datastore_name = e.datastore_name
+    if (DATASTORE_NAME): # if valid name assign it
+        datastore_name = DATASTORE_NAME
     else: # get the default datastore tagged to the workspace
         datastore_name = aml_workspace.get_default_datastore().name
 
     # Read the rerun data ingestion from environment variables
-    rerun_data_ingest = literal_eval(e.fresh_data_ingest)
+    rerun_data_ingest = literal_eval(FRESH_DATA_INGEST)
 
     # Directory to the save prepared dataset
-    ingested_data_directory = e.ingested_data_directory
+    ingested_data_directory = SAVE_INGESTED_DATA_DIR
 
     # Target path on the datastore where the data should be saved
-    target_path = e.path_on_datastore
+    target_path = PATH_ON_DATASTORE
 
     # SubFolder name on datastore would be created as per datetime
     sub_folder_name = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -81,6 +83,7 @@ def main():
             # Print based on status
             print(f"--"*50)
             print(f"{status.upper()}: Dataset {dataset_name} is uploaded to {datastore_name}"
+                  f" on folder {folderpath_on_dstore}"
                   f" and registered on workspace {aml_workspace.name}")
             print(f"--" * 50)
         else:
