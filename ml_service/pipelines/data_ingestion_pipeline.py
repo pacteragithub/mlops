@@ -81,11 +81,11 @@ def main():
                                                  datastore_name, folderpath_on_dstore)
 
             # Print based on status
-            print(f"--"*50)
+            print(f"--"*75)
             print(f"{status.upper()}: Dataset {dataset_name} is uploaded to {datastore_name}"
                   f" on folder {folderpath_on_dstore}"
                   f" and registered on workspace {aml_workspace.name}")
-            print(f"--" * 50)
+            print(f"--" *75)
         else:
             print(f"Dataset {dataset_name} is already available on datastore {datastore_name}\n"
                   f"No Dataset Creation and Registration was triggered using")
