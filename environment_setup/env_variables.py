@@ -1,9 +1,13 @@
 import os
-from os.path import join, dirname
+from os.path import join
 from dotenv import load_dotenv
 
+# Extracting the .env file path
 dotenv_path = join(os.path.abspath(os.curdir), '.env')
 load_dotenv()
+
+# Requirements.txt path
+REQUIREMENTS_PATH = join(os.path.abspath(os.curdir), 'requirements.txt')
 
 # Folder related environment variables
 SOURCES_DIR_TRAIN = os.environ.get('SOURCES_DIR_TRAIN')
@@ -20,6 +24,11 @@ PATH_ON_DATASTORE = os.environ.get('PATH_ON_DATASTORE')
 # Azure ML Workspace Variables
 WORKSPACE_NAME = os.environ.get('WORKSPACE_NAME')
 EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
+
+# Azure compute related variables
+COMPUTE_CLUSTER_NAME = os.environ.get('COMPUTE_CLUSTER_NAME')
+AML_ENV_NAME = os.environ.get('AML_ENV_NAME')
+
 
 # Model Training related variables
 TRAIN_SCRIPT_PATH = os.environ.get('TRAIN_SCRIPT_PATH')
