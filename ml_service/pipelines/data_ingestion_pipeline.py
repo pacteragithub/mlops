@@ -4,6 +4,7 @@ from environment_setup.env_variables import DATASTORE_NAME, FRESH_DATA_INGEST, S
 
 # Azure core ML modules
 from azureml.core import Workspace
+from azureml.core.authentication import ServicePrincipalAuthentication
 
 # Data Ingestion related
 from kaggle_titanic.data_ingestion import data_preparation
@@ -21,11 +22,19 @@ def main():
     subscription_id = os.environ.get('SUBSCRIPTION_ID')
     resource_group = os.environ.get('RESOURCE_GROUP')
 
+    # Service Principal Authentication
+    spn_credentials = {
+        'tenant_id': os.environ['TENANT_ID'],
+        'service_principal_id': os.environ['SPN_ID'],
+        'service_principal_password': os.environ['SPN_PASSWORD'],
+    }
+
     # Connect to AML workspace using credentials
     aml_workspace = Workspace.get(
         name=workspace_name,
         subscription_id=subscription_id,
-        resource_group=resource_group
+        resource_group=resource_group,
+        auth=ServicePrincipalAuthentication(**spn_credentials)
     )
     print("get_workspace:")
     print(aml_workspace)
