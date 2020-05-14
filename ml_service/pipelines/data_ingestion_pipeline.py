@@ -17,9 +17,9 @@ from datetime import datetime
 def main():
 
     # Loading environment variables
-    workspace_name = os.environ.get('AmlWorkspaceName')
-    subscription_id = os.environ.get('SubscriptionID')
-    resource_group = os.environ.get('ResourceGroup')
+    workspace_name = os.environ.get('AML_WORKSPACE_NAME')
+    subscription_id = os.environ.get('SUBSCRIPTION_ID')
+    resource_group = os.environ.get('RESOURCE_GROUP')
 
     # Connect to AML workspace using credentials
     aml_workspace = Workspace.get(
