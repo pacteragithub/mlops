@@ -87,7 +87,7 @@ def main():
 
     # ******* Create an experiment and run the pipeline ********* #
     experiment = Experiment(workspace=aml_workspace, name='test-cleansing-pipeline')
-    pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
+    pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=False)
     print("Pipeline submitted for execution.")
 
     pipeline_run.wait_for_completion()

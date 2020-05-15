@@ -99,6 +99,6 @@ def get_workspace_compute_env():
 
     # Create a reusable ML environment
     environment = get_environment(
-        aml_workspace, AML_ENV_NAME , create_new= literal_eval(AML_REBUILD_ENVIRONMENT))
+        aml_workspace, AML_ENV_NAME, create_new=literal_eval(AML_REBUILD_ENVIRONMENT))
 
     return aml_workspace, aml_compute, environment
