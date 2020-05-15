@@ -57,11 +57,11 @@ def main():
         print(str(e))
 
     # **************** Data Cleansing Step************************** #
-    # Define parameters required for a pipeline
-    dataset_name_param = PipelineParameter(name="dataset_name", default_value="none")
+    # Define parameters required for the step
+    dataset_name_param = "passenger_data"
 
     # Define output after cleansing step
-    cleansed_data = PipelineData('cleansed_data', datastore=datastore)
+    cleansed_data = PipelineData('cleansed_data', datastore=datastore).as_dataset()
 
     # cleansing step creation
     # See the cleanse.py for details about input and output
@@ -80,5 +80,7 @@ def main():
     print("cleansingStep created.")
 
 
+if __name__ == '__main__':
+    main()
 
 
