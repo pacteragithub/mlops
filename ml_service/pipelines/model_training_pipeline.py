@@ -6,7 +6,7 @@ from environment_setup.env_variables import SOURCE_DIR, \
     TRAIN_SCRIPT_PATH, EVALUATE_SCRIPT_PATH, REGISTER_SCRIPT_PATH
 
 # Azure ML related packages
-from azureml.core import Datastore
+from azureml.core import Datastore, Experiment
 from azureml.core.runconfig import RunConfiguration
 from azureml.pipeline.core.graph import PipelineParameter
 from azureml.pipeline.steps import PythonScriptStep
@@ -65,7 +65,7 @@ def main():
 
     # cleansing step creation
     # See the cleanse.py for details about input and output
-    cleansingStep = PythonScriptStep(
+    cleansing_step = PythonScriptStep(
         name="Cleanse Raw Data",
         script_name=CLEANSE_SCRIPT_PATH,
         arguments=["--dataset_name", dataset_name_param,
@@ -78,6 +78,19 @@ def main():
     )
 
     print("cleansingStep created.")
+
+    # ****** Construct the Pipeline ****** #
+    # Construct the pipeline
+    pipeline_steps = [cleansing_step]
+    train_pipeline = Pipeline(workspace=aml_workspace, steps=pipeline_steps)
+    print("Pipeline is built.")
+
+    # ******* Create an experiment and run the pipeline ********* #
+    experiment = Experiment(workspace=aml_workspace, name='test-cleansing-pipeline')
+    pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
+    print("Pipeline submitted for execution.")
+
+    pipeline_run.wait_for_completion()
 
 
 if __name__ == '__main__':
