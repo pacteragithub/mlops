@@ -7,6 +7,7 @@ dotenv_path = join(os.path.abspath(os.curdir), '.env')
 load_dotenv()
 
 # Requirements.txt path
+ROOT_DIR = os.path.abspath(os.curdir)
 REQUIREMENTS_PATH = join(os.path.abspath(os.curdir), 'requirements.txt')
 
 # Folder related environment variables

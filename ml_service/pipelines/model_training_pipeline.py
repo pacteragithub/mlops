@@ -1,6 +1,6 @@
 # Environment related utilities
 import os
-from environment_setup.env_variables import SOURCE_DIR, \
+from environment_setup.env_variables import ROOT_DIR, SOURCE_DIR, \
     DATASTORE_NAME, FRESH_DATA_INGEST, SAVE_INGESTED_DATA_DIR, PATH_ON_DATASTORE,\
     CLEANSE_SCRIPT_PATH, FEATENG_SCRIPT_PATH,\
     TRAIN_SCRIPT_PATH, EVALUATE_SCRIPT_PATH, REGISTER_SCRIPT_PATH
@@ -63,21 +63,26 @@ def main():
     # Define output after cleansing step
     cleansed_data = PipelineData('cleansed_data', datastore=datastore).as_dataset()
 
+    # Get full path of the cleansing scriot, folder name and script name
+    cleansing_full_path = os.path.abspath(os.path.join(SOURCE_DIR, CLEANSE_SCRIPT_PATH))
+    cleansing_src_dir_path = os.path.dirname(cleansing_full_path)
+    cleansing_script_name = os.path.basename(cleansing_full_path)
+
     # cleansing step creation
     # See the cleanse.py for details about input and output
     cleansing_step = PythonScriptStep(
         name="Cleanse Raw Data",
-        script_name=CLEANSE_SCRIPT_PATH,
+        script_name=cleansing_script_name,
         arguments=["--dataset_name", dataset_name_param,
                    "--output_cleanse", cleansed_data],
         outputs=[cleansed_data],
         compute_target=aml_compute,
         runconfig=run_config,
-        source_directory=SOURCE_DIR,
+        source_directory=cleansing_src_dir_path,
         allow_reuse=True
     )
 
-    print("cleansingStep created.")
+    print("Data Cleansing Step created.")
 
     # ****** Construct the Pipeline ****** #
     # Construct the pipeline
@@ -87,7 +92,7 @@ def main():
 
     # ******* Create an experiment and run the pipeline ********* #
     experiment = Experiment(workspace=aml_workspace, name='test-cleansing-pipeline')
-    pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=False)
+    pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
     print("Pipeline submitted for execution.")
 
     pipeline_run.wait_for_completion()

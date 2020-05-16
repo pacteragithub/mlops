@@ -2,8 +2,12 @@ import argparse
 import os
 import json
 from azureml.core import Run, Dataset
-from .clean_helpers import rename_columns
+from clean_helpers import rename_columns
 
+dummy1 = os.path.abspath(os.curdir)
+
+print(f"Root directory is {dummy1}")
+print(f"Listing files in root directory {os.listdir(dummy1)}")
 print("Cleans the raw data")
 
 # Giving a description of this file when invoked on command line like python clean.py -h
@@ -42,6 +46,8 @@ req_dataset = ds_meta.to_pandas_dataframe()
 # Perform necessary cleaning
 with open("col_mapping.json") as f:
     pars = json.load(f)
+
+# pars = {"Pclass":"Passenger_Class"}
 
 cleaned_df = rename_columns(req_dataset, pars)
 
