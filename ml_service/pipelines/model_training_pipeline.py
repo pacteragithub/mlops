@@ -14,7 +14,7 @@ from azureml.pipeline.steps import PythonScriptStep
 from azureml.pipeline.core import Pipeline, PipelineData
 
 # Data Related
-from kaggle_titanic.data_ingestion import data_preparation
+from kaggle_titanic.data_ingestion.dataprep import data_preparation
 
 # Fetch compute and other params
 from ml_service.util.aml_helpers import get_workspace_compute_env
@@ -93,7 +93,7 @@ def main():
     # Feature engineering step creation
     # See the feateng.py for details about input and output
     feateng_step = PythonScriptStep(
-        name="Creates new features",
+        name="Feature Engineering",
         script_name=FEATENG_SCRIPT_PATH,
         arguments=["--output_feateng", feateng_data],
         inputs=[cleansed_data.parse_delimited_files(file_extension=".csv")],
@@ -140,7 +140,7 @@ def main():
         runconfig=run_config,
         allow_reuse=False,
     )
-    print("Step Evaluate created")
+    print("Model Evaluation Step created")
 
     # **************** Model Registration Step************************** #
     register_step = PythonScriptStep(
@@ -156,7 +156,7 @@ def main():
         runconfig=run_config,
         allow_reuse=False,
     )
-    print("Step Register created")
+    print("Model Registration Step created")
 
     # Check run_evaluation flag to include or exclude evaluation step.
     if literal_eval(RUN_EVALUATION):
@@ -169,14 +169,13 @@ def main():
         register_step.run_after(train_step)
         steps = [cleansing_step, feateng_step, train_step, register_step]
 
-    # ****** Construct the Pipeline ****** #
+    # ******************* Construct & Publish the Pipeline ************************ #
     # Construct the pipeline
-    steps = [cleansing_step, feateng_step, train_step, evaluate_step]
     train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
     print("Pipeline is built.")
 
     # ******* Create an experiment and run the pipeline ********* #
-    experiment = Experiment(workspace=aml_workspace, name='cln_feat_train_eval')
+    experiment = Experiment(workspace=aml_workspace, name='cln_feat_train_eval_regis')
     pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
     print("Pipeline submitted for execution.")
 
