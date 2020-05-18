@@ -13,6 +13,7 @@ run_id = 'amlcompute'
 
 # Giving a description of this file when invoked on command line like python clean.py -h
 parser = argparse.ArgumentParser("evaluate")
+parser.add_argument("--run_id", type=str, help="Training run ID")
 parser.add_argument("--model_name", type=str, help="Name of the model", default="titanic_classifier_model.pkl")
 parser.add_argument("--allow_run_cancel", type=str,
                     help="Set this to false to avoid evaluation step from cancelling run after an unsuccessful evaluation",  # NOQA: E501

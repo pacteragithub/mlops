@@ -163,20 +163,20 @@ def main():
         print("Include evaluation step before register step.")
         evaluate_step.run_after(train_step)
         register_step.run_after(evaluate_step)
-        steps = [train_step, evaluate_step, register_step]
+        steps = [cleansing_step, feateng_step, train_step, evaluate_step, register_step]
     else:
         print("Exclude evaluation step and directly run register step.")
         register_step.run_after(train_step)
-        steps = [train_step, register_step]
+        steps = [cleansing_step, feateng_step, train_step, register_step]
 
     # ****** Construct the Pipeline ****** #
     # Construct the pipeline
-    steps = [cleansing_step, feateng_step, train_step]
+    steps = [cleansing_step, feateng_step, train_step, evaluate_step]
     train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
     print("Pipeline is built.")
 
     # ******* Create an experiment and run the pipeline ********* #
-    experiment = Experiment(workspace=aml_workspace, name='test-cln_feat_train')
+    experiment = Experiment(workspace=aml_workspace, name='cln_feat_train_eval')
     pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
     print("Pipeline submitted for execution.")
 
