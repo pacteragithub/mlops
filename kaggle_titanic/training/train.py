@@ -3,7 +3,7 @@ import os
 import json
 import joblib
 from azureml.core import Run
-from model_helper import split_data, train_model, get_model_metrics
+from training.train_helper import split_data, train_model, get_model_metrics
 
 dummy1 = os.path.abspath(os.curdir)
 

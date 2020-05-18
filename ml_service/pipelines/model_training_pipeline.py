@@ -3,7 +3,8 @@ import os
 from environment_setup.env_variables import ROOT_DIR, SOURCE_DIR, \
     DATASTORE_NAME, FRESH_DATA_INGEST, SAVE_INGESTED_DATA_DIR, PATH_ON_DATASTORE,\
     CLEANSE_SCRIPT_PATH, FEATENG_SCRIPT_PATH,\
-    TRAIN_SCRIPT_PATH, MODEL_NAME, EVALUATE_SCRIPT_PATH, REGISTER_SCRIPT_PATH
+    TRAIN_SCRIPT_PATH, MODEL_NAME, EVALUATE_SCRIPT_PATH, REGISTER_SCRIPT_PATH,\
+    ALLOW_RUN_CANCEL, RUN_EVALUATION
 
 # Azure ML related packages
 from azureml.core import Datastore, Experiment
@@ -22,15 +23,6 @@ from ml_service.util.ds_registration_helpers import create_and_register_datasets
 # other utilities
 from ast import literal_eval
 from datetime import datetime
-
-
-def get_srcdir_and_filename(src_directory, rel_script_path):
-
-    file_full_path = os.path.abspath(os.path.join(src_directory, rel_script_path))
-    src_dir_path = os.path.dirname(file_full_path)
-    script_name = os.path.basename(file_full_path)
-
-    return src_dir_path, script_name
 
 
 def main():
@@ -65,6 +57,12 @@ def main():
     except Exception as e:
         print(str(e))
 
+    # Parameters needed for this pipeline
+    model_name_param = PipelineParameter(name="model_name", default_value=MODEL_NAME)
+
+    # Other variables used in the pipeline
+    src_directory_path = os.path.join(ROOT_DIR, SOURCE_DIR)
+
     # **************** Data Cleansing Step************************** #
     # Define parameters required for the step
     dataset_name_param = "passenger_data"
@@ -72,20 +70,17 @@ def main():
     # Define output after cleansing step
     cleansed_data = PipelineData('cleansed_data', datastore=datastore).as_dataset()
 
-    # Get full path of the cleansing scriot, folder name and script name
-    cleansing_src_dir_path, cleansing_script_name = get_srcdir_and_filename(SOURCE_DIR, CLEANSE_SCRIPT_PATH)
-
     # cleansing step creation
     # See the cleanse.py for details about input and output
     cleansing_step = PythonScriptStep(
         name="Cleanse Raw Data",
-        script_name=cleansing_script_name,
+        script_name=CLEANSE_SCRIPT_PATH,
         arguments=["--dataset_name", dataset_name_param,
                    "--output_cleanse", cleansed_data],
         outputs=[cleansed_data],
         compute_target=aml_compute,
         runconfig=run_config,
-        source_directory=cleansing_src_dir_path,
+        source_directory=src_directory_path,
         allow_reuse=True
     )
 
@@ -95,20 +90,17 @@ def main():
     # Define output after Feature Engineering step
     feateng_data = PipelineData('feateng_data', datastore=datastore).as_dataset()
 
-    # Get full path of the feature engineering scriot, folder name and script name
-    feateng_src_dir_path, feateng_script_name = get_srcdir_and_filename(SOURCE_DIR, FEATENG_SCRIPT_PATH)
-
     # Feature engineering step creation
     # See the feateng.py for details about input and output
     feateng_step = PythonScriptStep(
         name="Creates new features",
-        script_name=feateng_script_name,
+        script_name=FEATENG_SCRIPT_PATH,
         arguments=["--output_feateng", feateng_data],
         inputs=[cleansed_data.parse_delimited_files(file_extension=".csv")],
         outputs=[feateng_data],
         compute_target=aml_compute,
         runconfig=run_config,
-        source_directory=feateng_src_dir_path,
+        source_directory=src_directory_path,
         allow_reuse=True
     )
 
@@ -118,16 +110,10 @@ def main():
     # Define output after cleansing step
     model_output = PipelineData('model_output', datastore=datastore)
 
-    # Get full path of the Training script script, folder name and script name
-    train_src_dir_path, train_script_name = get_srcdir_and_filename(SOURCE_DIR, TRAIN_SCRIPT_PATH)
-
-    # Parameters needed for this step
-    model_name_param = PipelineParameter(name="model_name", default_value=MODEL_NAME)
-
     # See the train.py for details about input and outpu
     train_step = PythonScriptStep(
         name="Train Model",
-        script_name=train_script_name,
+        script_name=TRAIN_SCRIPT_PATH,
         arguments=[
             "--model_name", model_name_param,
             "--output_model", model_output],
@@ -135,16 +121,59 @@ def main():
         outputs=[model_output],
         compute_target=aml_compute,
         runconfig=run_config,
-        source_directory=train_src_dir_path,
+        source_directory=src_directory_path,
         allow_reuse=True
     )
 
     print("Model Training Step created.")
 
+    # **************** Model Evaluation Step************************** #
+
+    evaluate_step = PythonScriptStep(
+        name="Evaluate Model ",
+        script_name=EVALUATE_SCRIPT_PATH,
+        compute_target=aml_compute,
+        source_directory=src_directory_path,
+        arguments=[
+            "--model_name", model_name_param,
+            "--allow_run_cancel", ALLOW_RUN_CANCEL,
+        ],
+        runconfig=run_config,
+        allow_reuse=False,
+    )
+    print("Step Evaluate created")
+
+    # **************** Model Registration Step************************** #
+
+    register_step = PythonScriptStep(
+        name="Register Model ",
+        script_name=REGISTER_SCRIPT_PATH,
+        compute_target=aml_compute,
+        source_directory=src_directory_path,
+        inputs=[model_output],
+        arguments=[
+            "--model_name", model_name_param,
+            "--output_model", model_output,
+        ],
+        runconfig=run_config,
+        allow_reuse=False,
+    )
+    print("Step Register created")
+
+    # Check run_evaluation flag to include or exclude evaluation step.
+    if literal_eval(RUN_EVALUATION):
+        print("Include evaluation step before register step.")
+        evaluate_step.run_after(train_step)
+        register_step.run_after(evaluate_step)
+        steps = [train_step, evaluate_step, register_step]
+    else:
+        print("Exclude evaluation step and directly run register step.")
+        register_step.run_after(train_step)
+        steps = [train_step, register_step]
+
     # ****** Construct the Pipeline ****** #
     # Construct the pipeline
-    pipeline_steps = [cleansing_step, feateng_step, train_step]
-    train_pipeline = Pipeline(workspace=aml_workspace, steps=pipeline_steps)
+    train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
     print("Pipeline is built.")
 
     # ******* Create an experiment and run the pipeline ********* #

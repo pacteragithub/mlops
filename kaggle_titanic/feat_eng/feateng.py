@@ -1,7 +1,7 @@
 import argparse
 import os
 from azureml.core import Run
-from feat_create import create_new_features
+from feat_eng.feat_create import create_new_features
 
 dummy1 = os.path.abspath(os.curdir)
 

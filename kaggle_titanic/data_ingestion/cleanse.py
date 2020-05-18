@@ -2,7 +2,7 @@ import argparse
 import os
 import json
 from azureml.core import Run, Dataset
-from clean_helpers import rename_columns
+from data_ingestion.clean_helpers import rename_columns
 
 dummy1 = os.path.abspath(os.curdir)
 

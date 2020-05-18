@@ -1,7 +1,0 @@
-{
-"training":{
-	"Random_Forest":{
-		"n_estimators":100
-	}
-}
-}

@@ -41,3 +41,7 @@ REGISTER_SCRIPT_PATH = os.environ.get('REGISTER_SCRIPT_PATH')
 # Model Output Variables
 MODEL_NAME = os.environ.get('MODEL_NAME')
 MODEL_VERSION = os.environ.get('MODEL_VERSION')
+
+# Other Variables
+ALLOW_RUN_CANCEL = os.environ.get('ALLOW_RUN_CANCEL')
+RUN_EVALUATION = os.environ.get('RUN_EVALUATION')
