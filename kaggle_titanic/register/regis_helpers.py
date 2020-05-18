@@ -15,21 +15,14 @@ def model_already_registered(model_name, exp, run_id):
         print("Model is not registered for this run.")
 
 
-def register_aml_model(
-    model_path,
-    model_name,
-    model_tags,
-    exp,
-    run_id,
-    dataset_id,
-    build_id: str = 'none',
-    build_uri=None
-):
+def register_aml_model(model_path, model_name, model_tags, exp, run_id, dataset_id,
+                       build_id: str = 'none', build_uri=None):
     try:
-        tagsValue = {"area": "diabetes_regression",
+        tagsValue = {"area": "kaggle_titanic",
                      "run_id": run_id,
                      "experiment_name": exp.name}
         tagsValue.update(model_tags)
+
         if (build_id != 'none'):
             model_already_registered(model_name, exp, run_id)
             tagsValue["BuildId"] = build_id

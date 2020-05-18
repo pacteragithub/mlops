@@ -128,7 +128,6 @@ def main():
     print("Model Training Step created.")
 
     # **************** Model Evaluation Step************************** #
-
     evaluate_step = PythonScriptStep(
         name="Evaluate Model ",
         script_name=EVALUATE_SCRIPT_PATH,
@@ -144,7 +143,6 @@ def main():
     print("Step Evaluate created")
 
     # **************** Model Registration Step************************** #
-
     register_step = PythonScriptStep(
         name="Register Model ",
         script_name=REGISTER_SCRIPT_PATH,
@@ -173,6 +171,7 @@ def main():
 
     # ****** Construct the Pipeline ****** #
     # Construct the pipeline
+    steps = [cleansing_step, feateng_step, train_step]
     train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
     print("Pipeline is built.")
 

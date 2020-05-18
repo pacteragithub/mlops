@@ -42,6 +42,10 @@ run = Run.get_context()
 feateng_data = run.input_datasets["feateng_data"]
 feateng_df = feateng_data.to_pandas_dataframe()
 
+# Tagging details to the run
+run.input_datasets["training_data"] = feateng_data
+run.parent.tag("dataset_id", value=feateng_data.id)
+
 # Split the data into train and test
 X_cols = ['Passenger_Class', 'Sex', 'SibSp', 'Parch', 'Fare']
 target_col = "Survived"
