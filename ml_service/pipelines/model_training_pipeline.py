@@ -3,7 +3,7 @@ import os
 from environment_setup.env_variables import ROOT_DIR, SOURCE_DIR, \
     DATASTORE_NAME, FRESH_DATA_INGEST, SAVE_INGESTED_DATA_DIR, PATH_ON_DATASTORE,\
     CLEANSE_SCRIPT_PATH, FEATENG_SCRIPT_PATH,\
-    TRAIN_SCRIPT_PATH, EVALUATE_SCRIPT_PATH, REGISTER_SCRIPT_PATH
+    TRAIN_SCRIPT_PATH, MODEL_NAME, EVALUATE_SCRIPT_PATH, REGISTER_SCRIPT_PATH
 
 # Azure ML related packages
 from azureml.core import Datastore, Experiment
@@ -92,10 +92,10 @@ def main():
     print("Data Cleansing Step created.")
 
     # **************** Feature Engineering Step************************** #
-    # Define output after cleansing step
+    # Define output after Feature Engineering step
     feateng_data = PipelineData('feateng_data', datastore=datastore).as_dataset()
 
-    # Get full path of the cleansing scriot, folder name and script name
+    # Get full path of the feature engineering scriot, folder name and script name
     feateng_src_dir_path, feateng_script_name = get_srcdir_and_filename(SOURCE_DIR, FEATENG_SCRIPT_PATH)
 
     # Feature engineering step creation
@@ -114,14 +114,41 @@ def main():
 
     print("Feat Engineering Step created.")
 
+    # **************** Model Training Step************************** #
+    # Define output after cleansing step
+    model_output = PipelineData('model_output', datastore=datastore)
+
+    # Get full path of the Training script script, folder name and script name
+    train_src_dir_path, train_script_name = get_srcdir_and_filename(SOURCE_DIR, TRAIN_SCRIPT_PATH)
+
+    # Parameters needed for this step
+    model_name_param = PipelineParameter(name="model_name", default_value=MODEL_NAME)
+
+    # See the train.py for details about input and outpu
+    train_step = PythonScriptStep(
+        name="Train Model",
+        script_name=train_script_name,
+        arguments=[
+            "--model_name", model_name_param,
+            "--output_model", model_output],
+        inputs=[feateng_data.parse_delimited_files(file_extension=".csv")],
+        outputs=[model_output],
+        compute_target=aml_compute,
+        runconfig=run_config,
+        source_directory=train_src_dir_path,
+        allow_reuse=True
+    )
+
+    print("Model Training Step created.")
+
     # ****** Construct the Pipeline ****** #
     # Construct the pipeline
-    pipeline_steps = [cleansing_step, feateng_step]
+    pipeline_steps = [cleansing_step, feateng_step, train_step]
     train_pipeline = Pipeline(workspace=aml_workspace, steps=pipeline_steps)
     print("Pipeline is built.")
 
     # ******* Create an experiment and run the pipeline ********* #
-    experiment = Experiment(workspace=aml_workspace, name='test-cln_feateng_pipe')
+    experiment = Experiment(workspace=aml_workspace, name='test-cln_feat_train')
     pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
     print("Pipeline submitted for execution.")
 
