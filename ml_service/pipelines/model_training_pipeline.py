@@ -24,6 +24,15 @@ from ast import literal_eval
 from datetime import datetime
 
 
+def get_srcdir_and_filename(src_directory, rel_script_path):
+
+    file_full_path = os.path.abspath(os.path.join(src_directory, rel_script_path))
+    src_dir_path = os.path.dirname(file_full_path)
+    script_name = os.path.basename(file_full_path)
+
+    return src_dir_path, script_name
+
+
 def main():
 
     # ******** Connect to Workspace, Setup Compute and Environment****** #
@@ -64,9 +73,7 @@ def main():
     cleansed_data = PipelineData('cleansed_data', datastore=datastore).as_dataset()
 
     # Get full path of the cleansing scriot, folder name and script name
-    cleansing_full_path = os.path.abspath(os.path.join(SOURCE_DIR, CLEANSE_SCRIPT_PATH))
-    cleansing_src_dir_path = os.path.dirname(cleansing_full_path)
-    cleansing_script_name = os.path.basename(cleansing_full_path)
+    cleansing_src_dir_path, cleansing_script_name = get_srcdir_and_filename(SOURCE_DIR, CLEANSE_SCRIPT_PATH)
 
     # cleansing step creation
     # See the cleanse.py for details about input and output
@@ -84,14 +91,37 @@ def main():
 
     print("Data Cleansing Step created.")
 
+    # **************** Feature Engineering Step************************** #
+    # Define output after cleansing step
+    feateng_data = PipelineData('feateng_data', datastore=datastore).as_dataset()
+
+    # Get full path of the cleansing scriot, folder name and script name
+    feateng_src_dir_path, feateng_script_name = get_srcdir_and_filename(SOURCE_DIR, FEATENG_SCRIPT_PATH)
+
+    # Feature engineering step creation
+    # See the feateng.py for details about input and output
+    feateng_step = PythonScriptStep(
+        name="Creates new features",
+        script_name=feateng_script_name,
+        arguments=["--output_feateng", feateng_data],
+        inputs=[cleansed_data.parse_delimited_files(file_extension=".csv")],
+        outputs=[feateng_data],
+        compute_target=aml_compute,
+        runconfig=run_config,
+        source_directory=feateng_src_dir_path,
+        allow_reuse=True
+    )
+
+    print("Feat Engineering Step created.")
+
     # ****** Construct the Pipeline ****** #
     # Construct the pipeline
-    pipeline_steps = [cleansing_step]
+    pipeline_steps = [cleansing_step, feateng_step]
     train_pipeline = Pipeline(workspace=aml_workspace, steps=pipeline_steps)
     print("Pipeline is built.")
 
     # ******* Create an experiment and run the pipeline ********* #
-    experiment = Experiment(workspace=aml_workspace, name='test-cleansing-pipeline')
+    experiment = Experiment(workspace=aml_workspace, name='test-cln_feateng_pipe')
     pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
     print("Pipeline submitted for execution.")
 
