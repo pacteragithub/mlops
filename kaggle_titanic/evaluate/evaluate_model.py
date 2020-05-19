@@ -41,13 +41,14 @@ try:
         if (metric_eval in model.tags):
             production_model_metric = float(model.tags[metric_eval])
         new_model_metric = float(run.parent.get_metrics().get(metric_eval))
+
         if (production_model_metric is None or new_model_metric is None):
             print("Unable to find", metric_eval, "metrics, "
                   "exiting evaluation")
             if((allow_run_cancel).lower() == 'true'):
                 run.parent.cancel()
         else:
-            print(f"Current Production model {metric_eval} : production_model_metric"
+            print(f"Current Production model {metric_eval} : {production_model_metric}"
                   f"New trained model {metric_eval}: {new_model_metric}")
 
         if (new_model_metric > production_model_metric):
