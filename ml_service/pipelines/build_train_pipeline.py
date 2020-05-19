@@ -48,8 +48,9 @@ def main():
     dict_dfs = data_preparation()
 
     # SubFolder name on datastore would be created as per datetime
-    sub_folder_name = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    folderpath_on_dstore = os.path.join(PATH_ON_DATASTORE, sub_folder_name, "")
+    # sub_folder_name = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    # folderpath_on_dstore = os.path.join(PATH_ON_DATASTORE, sub_folder_name, "")
+    folderpath_on_dstore = os.path.join(PATH_ON_DATASTORE, "")
 
     try:
         create_and_register_datasets(aml_workspace, datastore_name, dict_dfs, literal_eval(FRESH_DATA_INGEST),
@@ -174,6 +175,7 @@ def main():
     train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
     print("Pipeline is built.")
 
+    train_pipeline._set_experiment_name
     train_pipeline.validate()
     published_pipeline = train_pipeline.publish(
         name= TRAINING_PIPELINE_NAME,
@@ -182,13 +184,6 @@ def main():
     )
     print(f'Published pipeline: {published_pipeline.name}')
     print(f'for build {published_pipeline.version}')
-
-    # ******* Create an experiment and run the pipeline ********* #
-    experiment = Experiment(workspace=aml_workspace, name='cln_feat_train_eval_regis')
-    pipeline_run = experiment.submit(train_pipeline, regenerate_outputs=True)
-    print("Pipeline submitted for execution.")
-
-    pipeline_run.wait_for_completion()
 
 
 if __name__ == '__main__':

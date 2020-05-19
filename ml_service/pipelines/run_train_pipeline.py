@@ -1,5 +1,5 @@
 from azureml.pipeline.core import PublishedPipeline
-from azureml.core import Experiment, Workspace
+from azureml.core import Experiment
 import argparse
 from ml_service.util.aml_helpers import get_workspace
 from environment_setup.env_variables import TRAINING_PIPELINE_NAME, EXPERIMENT_NAME,\
