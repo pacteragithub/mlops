@@ -9,7 +9,6 @@ steps:
   inputs:
     targetType: filePath
     filePath: './environment_setup/install_requirements.sh'
-    workingDirectory: 'environment_setup'
 
 - script: |   
    python -m pytest . --cov=diabetes_regression --cov-report=html --cov-report=xml --junitxml=unit-testresults.xml
