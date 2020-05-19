@@ -17,6 +17,10 @@ def write_file_to_local(dataset_name, req_df, data_directory):
     # Get full path of directory
     directory_full_path = os.path.abspath(data_directory)
 
+    # Check if the directory doesn't exist and create it
+    if not os.path.exists(directory_full_path):
+        os.makedirs(directory_full_path)
+
     # Creating a file name
     req_file_name = dataset_name + ".csv"
 
