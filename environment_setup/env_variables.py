@@ -25,6 +25,7 @@ PATH_ON_DATASTORE = os.environ.get('PATH_ON_DATASTORE')
 # Azure ML Workspace Variables
 AML_WORKSPACE_NAME = os.environ.get('AML_WORKSPACE_NAME')
 EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
+TRAINING_PIPELINE_NAME = os.environ.get('TRAINING_PIPELINE_NAME')
 
 # Azure compute related variables
 COMPUTE_CLUSTER_NAME = os.environ.get('COMPUTE_CLUSTER_NAME')
@@ -45,3 +46,7 @@ MODEL_VERSION = os.environ.get('MODEL_VERSION')
 # Other Variables
 ALLOW_RUN_CANCEL = os.environ.get('ALLOW_RUN_CANCEL')
 RUN_EVALUATION = os.environ.get('RUN_EVALUATION')
+
+# Build ID for local testing
+BUILD_ID = os.environ.get('BUILD_BUILDID')
+BUILD_URI = os.environ.get('BUILD_URI')

@@ -4,7 +4,7 @@ from environment_setup.env_variables import ROOT_DIR, SOURCE_DIR, \
     DATASTORE_NAME, FRESH_DATA_INGEST, SAVE_INGESTED_DATA_DIR, PATH_ON_DATASTORE,\
     CLEANSE_SCRIPT_PATH, FEATENG_SCRIPT_PATH,\
     TRAIN_SCRIPT_PATH, MODEL_NAME, EVALUATE_SCRIPT_PATH, REGISTER_SCRIPT_PATH,\
-    ALLOW_RUN_CANCEL, RUN_EVALUATION
+    ALLOW_RUN_CANCEL, RUN_EVALUATION, TRAINING_PIPELINE_NAME, BUILD_ID
 
 # Azure ML related packages
 from azureml.core import Datastore, Experiment
@@ -173,6 +173,15 @@ def main():
     # Construct the pipeline
     train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
     print("Pipeline is built.")
+
+    train_pipeline.validate()
+    published_pipeline = train_pipeline.publish(
+        name= TRAINING_PIPELINE_NAME,
+        description="Model training/retraining pipeline",
+        version=BUILD_ID
+    )
+    print(f'Published pipeline: {published_pipeline.name}')
+    print(f'for build {published_pipeline.version}')
 
     # ******* Create an experiment and run the pipeline ********* #
     experiment = Experiment(workspace=aml_workspace, name='cln_feat_train_eval_regis')

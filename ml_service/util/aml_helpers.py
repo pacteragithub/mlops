@@ -63,13 +63,7 @@ def get_environment(workspace, environment_name, create_new=False):
         exit(1)
 
 
-def get_workspace_compute_env():
-    """
-    Function to connect to workspace, get compute and register environment needed for AML
-    """
-
-    # Intialize everything to none
-    aml_workspace = None; aml_compute = None; environment = None
+def get_workspace():
 
     # Loading user controlled environment variables
     workspace_name = AML_WORKSPACE_NAME                     # User controlled in .env file
@@ -90,6 +84,19 @@ def get_workspace_compute_env():
         resource_group=resource_group,
         auth=ServicePrincipalAuthentication(**spn_credentials)
     )
+
+    return aml_workspace
+
+
+def get_workspace_compute_env():
+    """
+    Function to connect to workspace, get compute and register environment needed for AML
+    """
+
+    # Intialize everything to none
+    aml_workspace = None; aml_compute = None; environment = None
+
+    aml_workspace = get_workspace()
     print("get_workspace:")
     print(aml_workspace)
 
