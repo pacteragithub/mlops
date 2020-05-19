@@ -11,6 +11,14 @@ variables:
     # Flag indication whether there is a need for fresh data ingestion due to code change
   - name: FRESH_DATA_INGEST
     value: True
+
+  # Model Training related configs
+    # The path to the data cleansing script under SOURCES_DIR_TRAIN
+  - name: CLEANSE_SCRIPT_PATH
+    value: data_ingestion/cleanse.py
+    # The path to the feature engineering script under SOURCES_DIR_TRAIN
+  - name: FEATENG_SCRIPT_PATH
+    value: feat_eng/feateng.py
     # The path to the model training script under SOURCES_DIR_TRAIN
   - name: TRAIN_SCRIPT_PATH
     value: training/train.py
@@ -24,26 +32,27 @@ variables:
   - name: SCORE_SCRIPT
     value: scoring/score.py
 
+  # Data Store related details
+  - name: DATASTORE_NAME
+    value: titanic
+  - name: PATH_ON_DATASTORE
+    value: raw_data
+
   # Azure ML Variables
-  - name: AML_WORKSPACE_NAME
+  - name: WORKSPACE_NAME
     value: mlops-wksp
   - name: EXPERIMENT_NAME
     value: titanic_RF
-#   Uncomment DATASTORE_NAME if you have configured non default datastore to point to your data
-   - name: DATASTORE_NAME
-     value: titanic
-  - name: PATH_ON_DATASTORE
-    value: raw_data
   - name: TRAINING_PIPELINE_NAME
     value: titanic-Training-Pipeline
   - name: MODEL_NAME
     value: titanic_classifier_model.pkl
 
   # AML Compute Cluster Config
+  - name: COMPUTE_CLUSTER_NAME
+    value: test-python
   - name: AML_ENV_NAME
     value: titanic_training_env
-  - name: AML_COMPUTE_CLUSTER_NAME
-    value: test-python
 
   # The name for the (docker/webapp) scoring image
   - name: IMAGE_NAME
@@ -56,17 +65,17 @@ variables:
   # These are the default values set in ml_service\util\env_variables.py. Uncomment and override if desired.
     # Set to false to disable the evaluation step in the ML pipeline and register the newly trained model unconditionally.
    - name: RUN_EVALUATION
-     value: "true"
+     value: true
+
     # Set to false to register the model regardless of the outcome of the evaluation step in the ML pipeline.
    - name: ALLOW_RUN_CANCEL
-     value: "true"
+     value: true
 
     # For debugging deployment issues. Specify a build id with the MODEL_BUILD_ID pipeline variable at queue time
     # to skip training and deploy a model registered by a previous build.
   - name: modelbuildid
     value: $[coalesce(variables['MODEL_BUILD_ID'], variables['Build.BuildId'])]
 
-  
   # Flag to allow rebuilding the AML Environment after it was built for the first time. This enables dependency updates from conda_dependencies.yaml.
   - name: AML_REBUILD_ENVIRONMENT
-    value: "true"
+    value: true
