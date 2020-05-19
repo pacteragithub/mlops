@@ -1,16 +1,7 @@
-# Import User controlled enviroment variables
-import os
-from environment_setup.env_variables import AML_WORKSPACE_NAME, COMPUTE_CLUSTER_NAME,\
-    AML_ENV_NAME, AML_REBUILD_ENVIRONMENT, REQUIREMENTS_PATH
-
-# Azure ml related
 from azureml.core.compute import ComputeTarget
 from azureml.exceptions import ComputeTargetException
 from azureml.core import Environment, Workspace
 from azureml.core.authentication import ServicePrincipalAuthentication
-
-# Other utilities
-from ast import literal_eval
 
 
 def get_compute(workspace, compute_name):
@@ -33,15 +24,13 @@ def get_compute(workspace, compute_name):
     return aml_compute
 
 
-def get_environment(workspace, environment_name, create_new=False):
+def get_environment(workspace, environment_name, requirements_path, create_new=False):
     """
     Function which returns the environment object which can be attached to run context
     workspace (Workspace)   : AML workspace object
     environment_name (str)  : name of the environment
     return                  : environment object
     """
-    # File path of requirement.txt
-    requirements_path = REQUIREMENTS_PATH
 
     try:
         environments = Environment.list(workspace=workspace)
@@ -63,19 +52,7 @@ def get_environment(workspace, environment_name, create_new=False):
         exit(1)
 
 
-def get_workspace():
-
-    # Loading user controlled environment variables
-    workspace_name = AML_WORKSPACE_NAME                     # User controlled in .env file
-    subscription_id = os.environ.get('SUBSCRIPTION_ID')     # Loaded by DevOps
-    resource_group = os.environ.get('RESOURCE_GROUP')       # Loaded by DevOps
-
-    # Service Principal Authentication
-    spn_credentials = {
-        'tenant_id': os.environ['TENANT_ID'],
-        'service_principal_id': os.environ['SPN_ID'],
-        'service_principal_password': os.environ['SPN_PASSWORD'],
-    }
+def get_workspace(workspace_name, subscription_id, resource_group, spn_credentials):
 
     # Connect to AML workspace using credentials
     aml_workspace = Workspace.get(
@@ -85,27 +62,7 @@ def get_workspace():
         auth=ServicePrincipalAuthentication(**spn_credentials)
     )
 
-    return aml_workspace
-
-
-def get_workspace_compute_env():
-    """
-    Function to connect to workspace, get compute and register environment needed for AML
-    """
-
-    # Intialize everything to none
-    aml_workspace = None; aml_compute = None; environment = None
-
-    aml_workspace = get_workspace()
     print("get_workspace:")
     print(aml_workspace)
 
-    # Get aml compute
-    aml_compute = get_compute(workspace=aml_workspace,
-                              compute_name=COMPUTE_CLUSTER_NAME)
-
-    # Create a reusable ML environment
-    environment = get_environment(
-        aml_workspace, AML_ENV_NAME, create_new=literal_eval(AML_REBUILD_ENVIRONMENT))
-
-    return aml_workspace, aml_compute, environment
+    return aml_workspace

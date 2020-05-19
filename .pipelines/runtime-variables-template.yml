@@ -29,8 +29,6 @@ variables:
     value: mlops-wksp
   - name: EXPERIMENT_NAME
     value: titanic_RF
-#  - name: DATASET_NAME
-#    value: diabetes_ds
 #   Uncomment DATASTORE_NAME if you have configured non default datastore to point to your data
    - name: DATASTORE_NAME
      value: titanic
@@ -44,7 +42,7 @@ variables:
   # AML Compute Cluster Config
   - name: AML_ENV_NAME
     value: titanic_training_env
-  - name: COMPUTE_CLUSTER_NAME
+  - name: AML_COMPUTE_CLUSTER_NAME
     value: test-python
 
   # The name for the (docker/webapp) scoring image
