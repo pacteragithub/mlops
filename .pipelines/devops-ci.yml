@@ -1,10 +1,5 @@
 # Continuous Integration (CI) pipeline that orchestrates the training, evaluation, registration, deployment, and testing of the diabetes_regression model.
 
-resources:
-  containers:
-  - container: mlops
-    image: mcr.microsoft.com/mlops/python:latest
-
 pr: none
 trigger:
   branches:
@@ -28,7 +23,6 @@ stages:
   jobs:
   - job: "Model_CI_Pipeline"
     displayName: "Model CI Pipeline"
-    container: mlops
     timeoutInMinutes: 0
     steps:
     - task: Bash@3
