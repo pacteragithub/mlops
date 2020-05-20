@@ -14,9 +14,9 @@ trigger:
     include:
     - kaggle_titanic/
 
-#variables:
-#- template: diabetes_regression-variables-template.yml
-#- group: devopsforai-aml-vg
+variables:
+- template: runtime-variables-template.yml
+- group: Azure-SCN
 
 pool:
   vmImage: ubuntu-latest
