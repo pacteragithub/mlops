@@ -58,7 +58,6 @@ stages:
   - job: "Get_Pipeline_ID"
     condition: and(succeeded(), eq(coalesce(variables['auto-trigger-training'], 'true'), 'true'))
     displayName: "Get Pipeline ID for execution"
-    container: mlops
     timeoutInMinutes: 0
     steps:
     - task: AzureCLI@1
@@ -94,7 +93,6 @@ stages:
     dependsOn: "Run_ML_Pipeline"
     condition: always()
     displayName: "Determine if evaluation succeeded and new model is registered"
-    container: mlops
     timeoutInMinutes: 0
     steps:
     - template: get-model-version-template.yml
