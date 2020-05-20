@@ -30,8 +30,7 @@ stages:
     - bash: |
         python -m venv venv
         source venv/bin/activate
-        ls -la
-        pip install -r requirements.txt 
+        ls -la 
       displayName: 'Setting up virtual Environment'
       env:
         WORKSPACE_NAME: $(WORKSPACE_NAME)
@@ -40,6 +39,10 @@ stages:
         SP_APP_ID: $(SP_APP_ID)
         SP_APP_SECRET: $(SP_APP_SECRET)
         TENANT_ID: $(TENANT_ID)
+    - bash: |
+        ls -la
+        pip install -r requirements.txt   
+      displayName: 'Installing requirements'
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
