@@ -5,9 +5,7 @@ trigger:
   branches:
     include:
     - master
-#  paths:
-#    include:
-#    - kaggle_titanic/
+
 
 variables:
 - template: runtime-variables-template.yml
@@ -29,6 +27,10 @@ stages:
       displayName: 'Use Python 3.7'
       inputs:
         versionSpec: 3.7
+    - bash: |
+        pwd 
+        ls -la
+      displayName: 'Bash Script'
     - task: Bash@3
       displayName: 'Install dependencies'
       inputs:
