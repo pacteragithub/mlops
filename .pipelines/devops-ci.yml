@@ -31,7 +31,6 @@ stages:
         python -m venv venv
         source venv/bin/activate
         pip install -r requirements.txt 
-        python -m ml_service.pipelines.data_ingestion_pipeline
       displayName: 'Setting up virtual Environment'
       env:
         WORKSPACE_NAME: $(WORKSPACE_NAME)
