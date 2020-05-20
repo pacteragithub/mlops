@@ -25,11 +25,11 @@ stages:
     displayName: "Model CI Pipeline"
     timeoutInMinutes: 0
     steps:
-    #- task: Bash@3
-     # displayName: 'Install dependencies'
-      #inputs:
-       # targetType: filePath
-        #filePath: './environment_setup/install_requirements.sh'
+    - task: Bash@3
+      displayName: 'Install dependencies'
+      inputs:
+        targetType: filePath
+        filePath: './environment_setup/install_requirements.sh'
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
