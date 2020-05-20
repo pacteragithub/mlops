@@ -28,14 +28,18 @@ stages:
       inputs:
         versionSpec: 3.7
     - bash: |
-        pwd 
-        ls -la
-      displayName: 'Bash Script'
-    - task: Bash@3
-      displayName: 'Install dependencies'
-      inputs:
-        targetType: filePath
-        filePath: './environment_setup/install_requirements.sh'
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt 
+        python -m ml_service.pipelines.data_ingestion_pipeline
+      displayName: 'Setting up virtual Environment'
+      env:
+        WORKSPACE_NAME: $(WORKSPACE_NAME)
+        RESOURCE_GROUP: $(RESOURCE_GROUP)
+        SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+        SP_APP_ID: $(SP_APP_ID)
+        SP_APP_SECRET: $(SP_APP_SECRET)
+        TENANT_ID: $(TENANT_ID)
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
@@ -46,7 +50,7 @@ stages:
           set -e # fail on error
           export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
           # Invoke the Python building and publishing a training pipeline
-      #    python -m ml_service.pipelines.build_train_pipeline
+          python -m ml_service.pipelines.build_train_pipeline
       displayName: 'Publish Azure Machine Learning Pipeline'
 
 - stage: 'Trigger_AML_Pipeline'
