@@ -46,7 +46,7 @@ stages:
           set -e # fail on error
           export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
           # Invoke the Python building and publishing a training pipeline
-          python -m ml_service.pipelines.build_train_pipeline
+      #    python -m ml_service.pipelines.build_train_pipeline
       displayName: 'Publish Azure Machine Learning Pipeline'
 
 - stage: 'Trigger_AML_Pipeline'
@@ -60,6 +60,10 @@ stages:
     displayName: "Get Pipeline ID for execution"
     timeoutInMinutes: 0
     steps:
+    - bash: |
+        pwd 
+        ls -la
+      displayName: 'Bash Script'
     - task: AzureCLI@1
       inputs:
         azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
