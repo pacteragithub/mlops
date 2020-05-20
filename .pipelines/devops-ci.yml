@@ -5,13 +5,13 @@ trigger:
   branches:
     include:
     - master
-  paths:
-    include:
-    - kaggle_titanic/
+#  paths:
+#    include:
+#    - kaggle_titanic/
 
 variables:
 - template: runtime-variables-template.yml
-- group: Azure-SCN
+- group: devopsforai-aml-vg
 
 pool:
   vmImage: ubuntu-latest
@@ -25,6 +25,10 @@ stages:
     displayName: "Model CI Pipeline"
     timeoutInMinutes: 0
     steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python 3.7'
+      inputs:
+        versionSpec: 3.7
     - task: Bash@3
       displayName: 'Install dependencies'
       inputs:
