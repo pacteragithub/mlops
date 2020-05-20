@@ -1,15 +1,17 @@
 {
     "training":
     {
-        "alpha": 0.4
-    },
+	"Random_Forest":{
+		"n_estimators":100
+		}
+	},
     "evaluation":
     {
 
     },
     "registration":
     {
-        "tags": ["mse"]
+        "tags": ["accuracy"]
     },
     "scoring":
     {

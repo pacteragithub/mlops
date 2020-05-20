@@ -14,3 +14,9 @@ def convert_to_datetime(df, colname, format):
 
     # Convert to datetime
     df[colname] = to_datetime(df[colname], format=format)
+
+
+def rename_columns(df, mapping):
+    # Rename columns
+    df = df.rename(columns=mapping)
+    return df
