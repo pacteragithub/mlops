@@ -2,8 +2,7 @@ from azureml.pipeline.core import PublishedPipeline
 from azureml.core import Experiment
 import argparse
 from ml_service.util.aml_helpers import get_workspace
-from environment_setup.env_variables import TRAINING_PIPELINE_NAME, EXPERIMENT_NAME,\
-    BUILD_ID, BUILD_URI, MODEL_NAME
+from ml_service.util.env_variables import Env
 
 
 def main():
@@ -23,24 +22,33 @@ def main():
     )
     args = parser.parse_args()
 
+    # Fetching environment variables
+    e = Env()
+
     # ******** Connect to Workspace****** #
-    aml_workspace = get_workspace()
+    # SPN credentials needed to authenticate
+    spn_credentials = {
+        'tenant_id': e.tenant_id,
+        'service_principal_id': e.app_id,
+        'service_principal_password': e.app_secret,
+    }
+    aml_workspace = get_workspace(e.workspace_name, e.subscription_id, e.resource_group, spn_credentials)
 
     # Find the pipeline that was published by the specified build ID
     pipelines = PublishedPipeline.list(aml_workspace)
     matched_pipes = []
 
     for p in pipelines:
-        if p.name == TRAINING_PIPELINE_NAME:
-            if p.version == BUILD_ID:
+        if p.name == e.pipeline_name:
+            if p.version == e.build_id:
                 matched_pipes.append(p)
 
     if len(matched_pipes) > 1:
         published_pipeline = None
-        raise Exception(f"Multiple active pipelines are published for build {BUILD_ID}.")  # NOQA: E501
+        raise Exception(f"Multiple active pipelines are published for build {e.build_id}.")  # NOQA: E501
     elif len(matched_pipes) == 0:
         published_pipeline = None
-        raise KeyError(f"Unable to find a published pipeline for this build {BUILD_ID}")  # NOQA: E501
+        raise KeyError(f"Unable to find a published pipeline for this build {e.build_id}")  # NOQA: E501
     else:
         published_pipeline = matched_pipes[0]
         print("published pipeline id is", published_pipeline.id)
@@ -51,13 +59,13 @@ def main():
                 out_file.write(published_pipeline.id)
 
         if args.skip_train_execution is False:
-            pipeline_parameters = {"model_name": MODEL_NAME}
-            tags = {"BuildId": BUILD_ID}
-            if BUILD_URI is not None:
-                tags["BuildUri"] = BUILD_URI
+            pipeline_parameters = {"model_name": e.model_name}
+            tags = {"BuildId": e.build_id}
+            if e.build_uri is not None:
+                tags["BuildUri"] = e.build_uri
             experiment = Experiment(
                 workspace=aml_workspace,
-                name=EXPERIMENT_NAME)
+                name=e.experiment_name)
             run = experiment.submit(
                 published_pipeline,
                 tags=tags,
