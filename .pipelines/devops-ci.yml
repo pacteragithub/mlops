@@ -47,5 +47,4 @@ stages:
           export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
           # Invoke the Python building and publishing a training pipeline
 #          python -m ml_service.pipelines.diabetes_regression_build_train_pipeline
-          az resource list
       displayName: 'Publish Azure Machine Learning Pipeline'
