@@ -64,12 +64,12 @@ variables:
 
   # These are the default values set in ml_service\util\env_variables.py. Uncomment and override if desired.
     # Set to false to disable the evaluation step in the ML pipeline and register the newly trained model unconditionally.
-   - name: RUN_EVALUATION
-     value: true
+  - name: RUN_EVALUATION
+    value: true
 
     # Set to false to register the model regardless of the outcome of the evaluation step in the ML pipeline.
-   - name: ALLOW_RUN_CANCEL
-     value: true
+  - name: ALLOW_RUN_CANCEL
+    value: true
 
     # For debugging deployment issues. Specify a build id with the MODEL_BUILD_ID pipeline variable at queue time
     # to skip training and deploy a model registered by a previous build.
