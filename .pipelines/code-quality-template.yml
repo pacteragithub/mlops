@@ -5,7 +5,7 @@
 #  displayName: 'Run lint tests'
 steps:
 - script: |   
-   python -m pytest . --cov=diabetes_regression --cov-report=html --cov-report=xml --junitxml=unit-testresults.xml
+   python -m pytest . --cov=kaggle_titanic --cov-report=html --cov-report=xml --junitxml=unit-testresults.xml
   condition: succeededOrFailed()
   displayName: 'Run unit tests'
 
