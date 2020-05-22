@@ -2,7 +2,7 @@ import argparse
 import sys
 import os
 from azureml.core import Run, Experiment, Workspace
-from environment_setup.env_variables import MODEL_NAME
+from ml_service.util.env_variables import Env
 from kaggle_titanic.util.model_helper import get_latest_model
 
 
@@ -32,6 +32,8 @@ def main():
     else:
         exp = run.experiment
 
+    e = Env()
+
     parser = argparse.ArgumentParser("register")
     parser.add_argument(
         "--build_id",
@@ -48,7 +50,7 @@ def main():
     args = parser.parse_args()
     if (args.build_id is not None):
         build_id = args.build_id
-    model_name = MODEL_NAME
+    model_name = e.model_name
 
     try:
         tag_name = 'BuildId'
