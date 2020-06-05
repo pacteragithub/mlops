@@ -28,9 +28,20 @@ stages:
   - job: "Model_CI_Pipeline"
     displayName: "Model CI Pipeline"
     container: mlops
-    timeoutInMinutes: 0
     steps:
-    - template: code-quality-template.yml
+    - bash: |
+       python -m pytest . --cov=kaggle_titanic --cov-report=html --cov-report=xml --junitxml=unit-testresults.xml
+      displayName: 'Data Quality Check'
+
+#Publish test result
+    steps:
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results '
+      inputs:
+        testResultsFiles: '*-testresults.xml'
+        failTaskOnFailedTests: true
+        testRunTitle: 'Unit Tests'
+    
     - task: AzureCLI@1
       inputs:
         azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
