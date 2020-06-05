@@ -15,7 +15,6 @@ trigger:
     - kaggle_titanic/
 
 variables:
-#- template: runtime-variables-template.yml
 - group: devops-ai-vg
 
 pool:
