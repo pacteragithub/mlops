@@ -15,7 +15,7 @@ trigger:
     - kaggle_titanic/
 
 variables:
-- template: runtime-variables-template.yml
+#- template: runtime-variables-template.yml
 - group: devops-ai-vg
 
 pool:
@@ -85,11 +85,11 @@ stages:
         PipelineId: '$(AMLPIPELINE_ID)'
         ExperimentName: '$(EXPERIMENT_NAME)'
         PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'
-  - job: "Training_Run_Report"
-    dependsOn: "Run_ML_Pipeline"
-    condition: always()
-    displayName: "Determine if evaluation succeeded and new model is registered"
-    container: mlops
-    timeoutInMinutes: 0
-    steps:
-    - template: get-model-version-template.yml
+#  - job: "Training_Run_Report"
+#    dependsOn: "Run_ML_Pipeline"
+#    condition: always()
+#    displayName: "Determine if evaluation succeeded and new model is registered"
+#    container: mlops
+#    timeoutInMinutes: 0
+#    steps:
+#    - template: get-model-version-template.yml
