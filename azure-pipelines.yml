@@ -34,7 +34,6 @@ stages:
       displayName: 'Data Quality Check'
 
 #Publish test result
-    steps:
     - task: PublishTestResults@2
       displayName: 'Publish Test Results '
       inputs:
