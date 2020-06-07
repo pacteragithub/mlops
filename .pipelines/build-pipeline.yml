@@ -93,3 +93,27 @@ stages:
     timeoutInMinutes: 0
     steps:
     - template: get-model-version-template.yml
+  
+- stage: 'Deploy_AKS'
+  displayName: 'Deploy to AKS'
+  environment: deployment
+  jobs:
+  - job: "Deploy_AKS"
+    displayName: "Deploy to AKS"
+    container: mlops
+    timeoutInMinutes: 0
+    steps:
+    - template: get-model-version-template.yml
+    - task: ms-air-aiagility.vss-services-azureml.azureml-model-deploy-task.AMLModelDeploy@0
+      displayName: 'Azure ML Model Deploy'
+      inputs:
+        azureSubscription: $(WORKSPACE_SVC_CONNECTION)
+        modelSourceType: manualSpec
+        modelName: '$(MODEL_NAME)'
+        modelVersion: $(MODEL_VERSION)
+        inferencePath: '$(Build.SourcesDirectory)/$(SOURCES_DIR_TRAIN)/scoring/inference_config.yml'
+        deploymentTarget: AKS
+        aksCluster: $(AKS_COMPUTE_NAME)
+        deploymentName: $(AKS_DEPLOYMENT_NAME)
+        deployConfig: '$(Build.SourcesDirectory)/$(SOURCES_DIR_TRAIN)/scoring/deployment_config_aks.yml'
+        overwriteExistingDeployment: true
