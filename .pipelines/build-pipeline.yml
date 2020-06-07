@@ -105,7 +105,6 @@ stages:
     - template: get-model-version-template.yml
     - task: ms-air-aiagility.vss-services-azureml.azureml-model-deploy-task.AMLModelDeploy@0
       displayName: 'Azure ML Model Deploy'
-      environment: 'deployment'
       inputs:
         azureSubscription: $(WORKSPACE_SVC_CONNECTION)
         modelSourceType: manualSpec
