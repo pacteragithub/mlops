@@ -70,6 +70,7 @@ def main():
                 published_pipeline,
                 tags=tags,
                 pipeline_parameters=pipeline_parameters)
+            run.wait_for_completion()
 
             print("Pipeline run initiated ", run.id)
 
