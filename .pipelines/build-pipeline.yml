@@ -95,8 +95,8 @@ stages:
     - template: get-model-version-template.yml
   
 - stage: 'Deploy_AKS'
-  displayName: 'Deploy to AKS'
   environment: deployment
+  displayName: 'Deploy to AKS'
   jobs:
   - job: "Deploy_AKS"
     displayName: "Deploy to AKS"
