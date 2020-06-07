@@ -95,11 +95,11 @@ stages:
     - template: get-model-version-template.yml
   
 - stage: 'Deploy_AKS'
-  environment: 'deployment'
   displayName: 'Deploy to AKS'
   jobs:
   - job: "Deploy_AKS"
     displayName: "Deploy to AKS"
+    environment: 'deployment'
     container: mlops
     timeoutInMinutes: 0
     steps:
