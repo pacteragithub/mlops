@@ -1,4 +1,4 @@
-# Environment related utilities listed
+# Environment related utilities
 import os
 from ml_service.util.env_variables import Env
 
