@@ -46,10 +46,10 @@ def data_preparation():
       
     blob = BlobClient(account_url="https://mlopsfoundationamlsa.blob.core.windows.net",
                   container_name="mlops-foundation",
-                  blob_name="raw_data",
+                  blob_name="raw_data/titanic_dataset.csv",
                   credential="iS2psbL4ar7bBOiBHxPMlHTmlhykt3dOdMGh4ZyR+mzfdoFFm+nwyI8u8ayN6a1YJmotA/Ge14LrL0jZSJDboA==")
 
-    with open("./titanic_dataset.csv", "wb") as f:
+    with open("titanic_dataset.csv", "wb") as f:
         data = blob.download_blob()
         data.readinto(f)
         req_data=pd.read_csv(data)
