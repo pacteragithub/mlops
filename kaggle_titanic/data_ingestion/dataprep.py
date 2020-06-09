@@ -29,31 +29,22 @@ def data_preparation():
 
     # Read the csv
     #req_data = read_csv(data_file_path)
-    
-#     STORAGEACCOUNTNAME= <storage_account_name>
-#     STORAGEACCOUNTKEY= <storage_account_key>
-#     LOCALFILENAME= <local_file_name>
-#     CONTAINERNAME= <container_name>
-#     BLOBNAME= <blob_name>
 
-#     #download from blob
-#     t1=time.time()
-#     blob_service=BlockBlobService(account_name=STORAGEACCOUNTNAME,account_key=STORAGEACCOUNTKEY)
-#     blob_service.get_blob_to_path(CONTAINERNAME,BLOBNAME,LOCALFILENAME)
-#     t2=time.time()
-#     print(("It takes %s seconds to download "+blobname) % (t2 - t1))
-      
-      
     blob = BlobClient(account_url="https://mlopsfoundationamlsa.blob.core.windows.net",
                   container_name="mlops-foundation",
-                  blob_name="raw_data/titanic_dataset.csv",
+                  blob_name="titanic_dataset.csv",
                   credential="iS2psbL4ar7bBOiBHxPMlHTmlhykt3dOdMGh4ZyR+mzfdoFFm+nwyI8u8ayN6a1YJmotA/Ge14LrL0jZSJDboA==")
+
+    # blob = BlobClient(account_url=os.getenv("ACCOUNT_URL"),
+    #               container_name=os.getenv("CONTAINER_NAME"),
+    #               blob_name=os.getenv("BLOB_NAME"),
+    #               credential=os.getenv("STORAGE_KEY"))
 
     with open("titanic_dataset.csv", "wb") as f:
         data = blob.download_blob()
         data.readinto(f)
-        req_data=pd.read_csv(data)
-        
+
+    req_data = pd.read_csv("titanic_dataset.csv")
 
     # Initialize a dictionary to store dataframe objects with names
     data_dict = {}
