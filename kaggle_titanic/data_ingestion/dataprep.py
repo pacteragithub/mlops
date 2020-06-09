@@ -45,7 +45,7 @@ def data_preparation():
 #     print(("It takes %s seconds to download "+blobname) % (t2 - t1))
       
       
-    blob = BlobClient(account_url="https://mlopsfoundationamlsa.blob.core.windows.net"
+    blob = BlobClient(account_url="https://mlopsfoundationamlsa.blob.core.windows.net",
                   container_name="mlops-foundation",
                   blob_name="raw_data/titanic_dataset.csv",
                   credential="iS2psbL4ar7bBOiBHxPMlHTmlhykt3dOdMGh4ZyR+mzfdoFFm+nwyI8u8ayN6a1YJmotA/Ge14LrL0jZSJDboA==")
