@@ -69,8 +69,9 @@ def main():
             run = experiment.submit(
                 published_pipeline,
                 tags=tags,
-                pipeline_parameters=pipeline_parameters)
-            run.wait_for_completion()
+                pipeline_parameters=pipeline_parameters,
+                show_output=True)
+            run.wait_for_completion(show_output=True)
 
             print("Pipeline run initiated ", run.id)
 
