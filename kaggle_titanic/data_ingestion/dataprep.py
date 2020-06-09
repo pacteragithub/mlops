@@ -30,15 +30,15 @@ def data_preparation():
     # Read the csv
     #req_data = read_csv(data_file_path)
 
-    blob = BlobClient(account_url="https://mlopsfoundationamlsa.blob.core.windows.net",
-                  container_name="mlops-foundation",
-                  blob_name="titanic_dataset.csv",
-                  credential="iS2psbL4ar7bBOiBHxPMlHTmlhykt3dOdMGh4ZyR+mzfdoFFm+nwyI8u8ayN6a1YJmotA/Ge14LrL0jZSJDboA==")
+#     blob = BlobClient(account_url="https://mlopsfoundationamlsa.blob.core.windows.net",
+#                   container_name="mlops-foundation",
+#                   blob_name="titanic_dataset.csv",
+#                   credential="iS2psbL4ar7bBOiBHxPMlHTmlhykt3dOdMGh4ZyR+mzfdoFFm+nwyI8u8ayN6a1YJmotA/Ge14LrL0jZSJDboA==")
 
-    # blob = BlobClient(account_url=os.getenv("ACCOUNT_URL"),
-    #               container_name=os.getenv("CONTAINER_NAME"),
-    #               blob_name=os.getenv("BLOB_NAME"),
-    #               credential=os.getenv("STORAGE_KEY"))
+    blob = BlobClient(account_url=os.getenv("ACCOUNT_URL"),
+                  container_name=os.getenv("CONTAINER_NAME"),
+                  blob_name=os.getenv("BLOB_NAME"),
+                  credential=os.getenv("STORAGE_KEY"))
 
     with open("titanic_dataset.csv", "wb") as f:
         data = blob.download_blob()
