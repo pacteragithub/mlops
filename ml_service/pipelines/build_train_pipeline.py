@@ -34,6 +34,7 @@ def main():
     }
 
     # ******** Connect to Workspace, Setup Compute and Environment****** #
+    # ****** To get credentials related to your workspace ************** #
     aml_workspace = get_workspace(e.workspace_name, e.subscription_id, e.resource_group, spn_credentials)
     aml_compute = get_compute(aml_workspace, e.compute_name)
     environment = get_environment(aml_workspace, e.aml_env_name, "requirements.txt",
@@ -83,7 +84,7 @@ def main():
     # Define output after cleansing step
     cleansed_data = PipelineData('cleansed_data', datastore=datastore).as_dataset()
 
-    # cleansing step creation
+    # Data cleansing step creation
     # See the cleanse.py for details about input and output
     cleansing_step = PythonScriptStep(
         name="Cleanse Raw Data",
