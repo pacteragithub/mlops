@@ -31,10 +31,7 @@ def main():
     num_missing = sum(tmp_df.isnull().sum())
 
     if num_missing > 0:
-        print(f"--" * 75)
         print("There are missing values in the dataset\n")
-        print(f"--" * 75)
-
         # Printing missing value summary
         print(f"--" * 75)
         print(tmp_df.isnull().sum())
