@@ -22,7 +22,7 @@ def main():
     check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Survived']
 
     # Uncomment this line to show failure of this test
-    # check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Age', 'Survived']
+    check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Age', 'Survived']
 
     # Temp dataset
     tmp_df = req_data[check_cols].copy()
@@ -31,11 +31,19 @@ def main():
     num_missing = sum(tmp_df.isnull().sum())
 
     if num_missing > 0:
+        print(f"--" * 75)
         print("There are missing values in the dataset\n")
+        print(f"--" * 75)
+
+        # Printing missing value summary
+        print(f"--" * 75)
         print(tmp_df.isnull().sum())
+        print(f"--" * 75)
         sys.exit(1)
     else:
+        print(f"--" * 75)
         print("There are no missing values in the dataset")
+        print(f"--" * 75)
 
 
 if __name__ == '__main__':
