@@ -22,7 +22,7 @@ def main():
     check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Survived']
 
     # Uncomment this line to show failure of this test
-    check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Age', 'Survived']
+    #check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Age', 'Survived']
 
     # Temp dataset
     tmp_df = req_data[check_cols].copy()
