@@ -24,7 +24,7 @@ def init():
 
 
 input_sample = numpy.array([[3, 0, 1, 0, 7.25],
-                          [1, 1, 1, 0, 53.1]])
+                            [1, 1, 1, 0, 53.1]])
 output_sample = numpy.array([0, 1])
 
 

@@ -3,7 +3,7 @@ import os
 from ml_service.util.env_variables import Env
 
 # Azure ML related packages
-from azureml.core import Datastore, Experiment
+from azureml.core import Datastore
 from azureml.core.runconfig import RunConfiguration
 from azureml.pipeline.core.graph import PipelineParameter
 from azureml.pipeline.steps import PythonScriptStep
@@ -13,12 +13,13 @@ from azureml.pipeline.core import Pipeline, PipelineData
 from kaggle_titanic.data_ingestion.dataprep import data_preparation
 
 # Fetch compute and other params
-from ml_service.util.aml_helpers import get_workspace, get_compute, get_environment
-from ml_service.util.ds_registration_helpers import create_and_register_datasets
+from ml_service.util.aml_helpers import get_workspace,\
+    get_compute, get_environment
+from ml_service.util.ds_registration_helpers\
+    import create_and_register_datasets
 
 # other utilities
 from distutils.util import strtobool
-from datetime import datetime
 
 
 def main():
@@ -35,9 +36,11 @@ def main():
 
     # ******** Connect to Workspace, Setup Compute and Environment****** #
     # ****** To get credentials related to your workspace ************** #
-    aml_workspace = get_workspace(e.workspace_name, e.subscription_id, e.resource_group, spn_credentials)
+    aml_workspace = get_workspace(e.workspace_name, e.subscription_id,
+                                  e.resource_group, spn_credentials)
     aml_compute = get_compute(aml_workspace, e.compute_name)
-    environment = get_environment(aml_workspace, e.aml_env_name, "requirements.txt",
+    environment = get_environment(aml_workspace, e.aml_env_name,
+                                  "requirements.txt",
                                   create_new=strtobool(e.rebuild_env))
 
     # Setting run configuration
@@ -45,12 +48,13 @@ def main():
     run_config.environment = environment
 
     # ******** Assign datastore to save and register datasets ********** #
-    if (e.datastore_name): # if valid name assign it
+    if (e.datastore_name):  # if valid name assign it
         datastore_name = e.datastore_name
-    else: # get the default datastore tagged to the workspace
+    else:  # get the default datastore tagged to the workspace
         datastore_name = aml_workspace.get_default_datastore().name
 
-    run_config.environment.environment_variables["DATASTORE_NAME"] = datastore_name
+    run_config.environment.\
+        environment_variables["DATASTORE_NAME"] = datastore_name
 
     # ******** Creating and Registering Datasets *********************** #
     # Make a connection to the datastore
@@ -62,17 +66,21 @@ def main():
 
     # SubFolder name on datastore would be created as per datetime
     # sub_folder_name = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    # folderpath_on_dstore = os.path.join(PATH_ON_DATASTORE, sub_folder_name, "")
+    # folderpath_on_dstore = os.path.join(PATH_ON_DATASTORE,
+    #                                     sub_folder_name, "")
     folderpath_on_dstore = os.path.join(e.path_on_datastore, "")
 
     try:
-        create_and_register_datasets(aml_workspace, datastore_name, dict_dfs, strtobool(e.fresh_data_ingest),
-                                     e.ingested_data_directory, folderpath_on_dstore)
+        create_and_register_datasets(aml_workspace, datastore_name,
+                                     dict_dfs, strtobool(e.fresh_data_ingest),
+                                     e.ingested_data_directory,
+                                     folderpath_on_dstore)
     except Exception as e:
         print(str(e))
 
     # Parameters needed for this pipeline
-    model_name_param = PipelineParameter(name="model_name", default_value=e.model_name)
+    model_name_param = PipelineParameter(name="model_name",
+                                         default_value=e.model_name)
 
     # Other variables used in the pipeline
     # src_directory_path = os.path.join(ROOT_DIR, SOURCE_DIR)
@@ -82,7 +90,8 @@ def main():
     dataset_name_param = "passenger_data"
 
     # Define output after cleansing step
-    cleansed_data = PipelineData('cleansed_data', datastore=datastore).as_dataset()
+    cleansed_data = PipelineData('cleansed_data',
+                                 datastore=datastore).as_dataset()
 
     # Data cleansing step creation
     # See the cleanse.py for details about input and output
@@ -102,7 +111,8 @@ def main():
 
     # **************** Feature Engineering Step************************** #
     # Define output after Feature Engineering step
-    feateng_data = PipelineData('feateng_data', datastore=datastore).as_dataset()
+    feateng_data = PipelineData('feateng_data',
+                                datastore=datastore).as_dataset()
 
     # Feature engineering step creation
     # See the feateng.py for details about input and output
@@ -177,13 +187,14 @@ def main():
         print("Include evaluation step before register step.")
         evaluate_step.run_after(train_step)
         register_step.run_after(evaluate_step)
-        steps = [cleansing_step, feateng_step, train_step, evaluate_step, register_step]
+        steps = [cleansing_step, feateng_step, train_step,
+                 evaluate_step, register_step]
     else:
         print("Exclude evaluation step and directly run register step.")
         register_step.run_after(train_step)
         steps = [cleansing_step, feateng_step, train_step, register_step]
 
-    # ******************* Construct & Publish the Pipeline ************************ #
+    # ******************* Construct & Publish the Pipeline ************ #
     # Construct the pipeline
     train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
     print("Pipeline is built.")

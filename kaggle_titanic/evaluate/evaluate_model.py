@@ -11,10 +11,14 @@ ws = run.experiment.workspace
 run_id = 'amlcompute'
 
 
-# Giving a description of this file when invoked on command line like python clean.py -h
+# Gives arguments needed when invoked on
+# command line like python evaluate_model.py -h
 parser = argparse.ArgumentParser("evaluate")
-parser.add_argument("--run_id", type=str, help="Training run ID")
-parser.add_argument("--model_name", type=str, help="Name of the model", default="titanic_classifier_model.pkl")
+parser.add_argument("--run_id",
+                    type=str, help="Training run ID")
+parser.add_argument("--model_name",
+                    type=str, help="Name of the model",
+                    default="titanic_classifier_model.pkl")
 parser.add_argument("--allow_run_cancel", type=str,
                     help="Set this to false to avoid evaluation step from cancelling run after an unsuccessful evaluation",  # NOQA: E501
                     default="true")
@@ -48,7 +52,8 @@ try:
             if((allow_run_cancel).lower() == 'true'):
                 run.parent.cancel()
         else:
-            print(f"Current Production model {metric_eval} : {production_model_metric}"
+            print(f"Current Production model "
+                  f"{metric_eval} : {production_model_metric}"
                   f"New trained model {metric_eval}: {new_model_metric}")
 
         if (new_model_metric > production_model_metric):

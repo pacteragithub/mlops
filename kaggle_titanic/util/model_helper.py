@@ -17,7 +17,8 @@ def get_current_workspace() -> Workspace:
     return experiment.workspace
 
 
-def get_latest_model(model_name, tag_name=None, tag_value=None, aml_workspace=None):
+def get_latest_model(model_name, tag_name=None, tag_value=None,
+                     aml_workspace=None):
     """
     Function to fetch the latest available model in the workspace
     """

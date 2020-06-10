@@ -11,10 +11,14 @@ print(f"Root directory is {dummy1}")
 print(f"Listing files in root directory {os.listdir(dummy1)}")
 print("Create new features")
 
-# Giving a description of this file when invoked on command line like python clean.py -h
+# Giving a description of this file
+# when invoked on command line like python clean.py -h
 parser = argparse.ArgumentParser("model training")
-parser.add_argument("--model_name", type=str, help="Name of the model", default="titanic_classifier_model.pkl")
-parser.add_argument("--output_model", type=str, help="Model Output directory")
+parser.add_argument("--model_name",
+                    type=str, help="Name of the model",
+                    default="titanic_classifier_model.pkl")
+parser.add_argument("--output_model",
+                    type=str, help="Model Output directory")
 
 # Parse the arguments
 args = parser.parse_args()

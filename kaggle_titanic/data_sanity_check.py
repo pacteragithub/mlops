@@ -7,9 +7,9 @@ from azure.storage.blob import BlobClient
 def main():
 
     blob = BlobClient(account_url=os.getenv("ACCOUNT_URL"),
-                  container_name=os.getenv("CONTAINER_NAME"),
-                  blob_name=os.getenv("BLOB_NAME"),
-                  credential=os.getenv("STORAGE_KEY"))
+                      container_name=os.getenv("CONTAINER_NAME"),
+                      blob_name=os.getenv("BLOB_NAME"),
+                      credential=os.getenv("STORAGE_KEY"))
 
     with open("raw_data.csv", "wb") as f:
         data = blob.download_blob()
@@ -22,7 +22,8 @@ def main():
     check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Survived']
 
     # Uncomment this line to show failure of this test
-    #check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare', 'Age', 'Survived']
+    # check_cols = ['Pclass', 'Sex', 'SibSp', 'Parch',
+    #               'Fare', 'Age', 'Survived']
 
     # Temp dataset
     tmp_df = req_data[check_cols].copy()

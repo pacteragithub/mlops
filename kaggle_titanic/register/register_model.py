@@ -14,8 +14,11 @@ run_id = 'amlcompute'
 
 parser = argparse.ArgumentParser("register")
 parser.add_argument("--run_id", type=str, help="Training run ID",)
-parser.add_argument("--model_name",type=str, help="Name of the Model", default="titanic_classifier_model.pkl",)
-parser.add_argument("--output_model", type=str, help="Model directory location")
+parser.add_argument("--model_name",
+                    type=str, help="Name of the Model",
+                    default="titanic_classifier_model.pkl",)
+parser.add_argument("--output_model",
+                    type=str, help="Model directory location")
 
 args = parser.parse_args()
 if (args.run_id is not None):
@@ -66,13 +69,16 @@ except KeyError:
     print(f"Tags present: {parent_tags}")
 
 if (model is not None):
-        dataset_id = parent_tags["dataset_id"]
-        if (build_id is None):
-            register_aml_model(model_file, model_name, model_tags, exp, run_id, dataset_id)
-        elif (build_uri is None):
-            register_aml_model(model_file, model_name, model_tags, exp, run_id, dataset_id, build_id)
-        else:
-            register_aml_model(model_file, model_name, model_tags, exp, run_id, dataset_id, build_id, build_uri)
+    dataset_id = parent_tags["dataset_id"]
+    if (build_id is None):
+        register_aml_model(model_file, model_name, model_tags,
+                           exp, run_id, dataset_id)
+    elif (build_uri is None):
+        register_aml_model(model_file, model_name, model_tags,
+                           exp, run_id, dataset_id, build_id)
+    else:
+        register_aml_model(model_file, model_name, model_tags,
+                           exp, run_id, dataset_id, build_id, build_uri)
 else:
     print("Model not found. Skipping model registration.")
     sys.exit(0)

@@ -39,15 +39,20 @@ def write_file_to_local(dataset_name, req_df, data_directory):
     return full_file_path
 
 
-def upload_and_register_dataset(req_full_file_path, dataset_name, aml_workspace, datastore_name, folderpath_on_dstore):
+def upload_and_register_dataset(req_full_file_path, dataset_name,
+                                aml_workspace, datastore_name,
+                                folderpath_on_dstore):
     """
     Function to upload files to a datastore
     req_full_file_path (str)    : Full os path of the filename
-    dataset_name (str)          : Name of the dataset with which it should be registered on aml workspace
+    dataset_name (str)          : Name of the dataset with which it
+                                should be registered on aml workspace
     aml_workspace (Workspace)   : AML workspace object
     datastore_name (str)        : Name of the datastore tagged to AML workspace
-    folderpath_on_dstore(str)   : Subfolder name where the datasets should be registered
-    return                      : "success" or "failure" based on the upload status
+    folderpath_on_dstore(str)   : Subfolder name where the
+                                datasets should be registered
+    return                      : "success" or "failure"
+                                based on the upload status
     """
 
     # Status
@@ -58,9 +63,9 @@ def upload_and_register_dataset(req_full_file_path, dataset_name, aml_workspace,
 
     try:
         # Upload files to datastore in workspace
-        aml_datastore.upload_files(files=[req_full_file_path],  # Upload the titanic csv files in /data
-                                   target_path=folderpath_on_dstore,  # Put it in a folder path in the datastore
-                                   overwrite=True,  # Replace existing files of the same name
+        aml_datastore.upload_files(files=[req_full_file_path],
+                                   target_path=folderpath_on_dstore,
+                                   overwrite=True,
                                    show_progress=True)
 
         # Basefile name extracted from local path
@@ -82,20 +87,24 @@ def upload_and_register_dataset(req_full_file_path, dataset_name, aml_workspace,
                 create_new_version=True)
 
         except Exception as ex:
-            print(f"Error in registering dataset {dataset_name} on datastore {datastore_name}")
+            print(f"Error in registering dataset"
+                  f" {dataset_name} on datastore {datastore_name}")
             print(ex)
             status = "failure"
 
     except Exception as ex:
-        print(f"Error in uploading file {req_full_file_path} onto the datastore {datastore_name}\n")
+        print(f"Error in uploading file "
+              f"{req_full_file_path} onto the datastore {datastore_name}\n")
         print(ex)
         status = "failure"
 
     return status
 
 
-def create_and_register_datasets(aml_workspace, datastore_name, dict_dfs, rerun_data_ingest,
-                                 ingested_data_directory, folderpath_on_dstore):
+def create_and_register_datasets(aml_workspace, datastore_name,
+                                 dict_dfs, rerun_data_ingest,
+                                 ingested_data_directory,
+                                 folderpath_on_dstore):
     """
     Function to create and register datasets
 
@@ -111,29 +120,39 @@ def create_and_register_datasets(aml_workspace, datastore_name, dict_dfs, rerun_
         # Check if the dataset exists in the aml workspace
         ds_unavailable = dataset_name not in aml_workspace.datasets
 
-        # If dataset is not already registered or fresh data ingest flag rerun dataset creation
+        # If dataset is not already registered
+        # or fresh data ingest flag rerun dataset creation
         if ds_unavailable or rerun_data_ingest:
 
             if ds_unavailable:
-                print(f"Dataset {dataset_name} unavailable on datastore {datastore_name}\n"
-                      f"Dataset Creation and Registration triggered for the first time")
+                print(f"Dataset {dataset_name} unavailable"
+                      f" on datastore {datastore_name}\n"
+                      f"Dataset Creation and Registration"
+                      f" triggered for the first time")
             else:
-                print(f"Dataset {dataset_name} already exists on datastore {datastore_name}\n"
-                      f"Dataset Creation and Registration triggered due to change in data or code base")
+                print(f"Dataset {dataset_name} already exists"
+                      f" on datastore {datastore_name}\n"
+                      f"Dataset Creation and Registration"
+                      f" triggered due to change in data or code base")
 
             # Write files to a local path and get full paths
-            req_full_file_path = write_file_to_local(dataset_name, req_df, ingested_data_directory)
+            req_full_file_path = write_file_to_local(dataset_name, req_df,
+                                                     ingested_data_directory)
 
             # Upload files to the datastore
-            status = upload_and_register_dataset(req_full_file_path, dataset_name, aml_workspace,
-                                                 datastore_name, folderpath_on_dstore)
+            status = upload_and_register_dataset(req_full_file_path,
+                                                 dataset_name, aml_workspace,
+                                                 datastore_name,
+                                                 folderpath_on_dstore)
 
             # Print based on status
             print(f"--"*75)
-            print(f"{status.upper()}: Dataset {dataset_name} is uploaded to {datastore_name}"
+            print(f"{status.upper()}: Dataset {dataset_name}"
+                  f" is uploaded to {datastore_name}"
                   f" on folder {folderpath_on_dstore}"
                   f" and registered on workspace {aml_workspace.name}")
-            print(f"--" *75)
+            print(f"--" * 75)
         else:
-            print(f"Dataset {dataset_name} is already available on datastore {datastore_name}\n"
+            print(f"Dataset {dataset_name} is already available"
+                  f" on datastore {datastore_name}\n"
                   f"No Dataset Creation and Registration was triggered using")

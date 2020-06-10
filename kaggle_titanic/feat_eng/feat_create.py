@@ -9,12 +9,18 @@ def get_status(df, Title_Dictionary):
 
 
 def add_title_features(df):
-    Title_Dictionary = {"Capt": "Officer", "Col": "Officer", "Major": "Officer", "Jonkheer": "Royalty",
-                        "Don": "Royalty", "Sir": "Royalty", "Dr": "Officer", "Rev": "Officer",
-                        "the Countess": "Royalty", "Mme": "Mrs", "Mlle": "Miss", "Ms": "Mrs","Mr": "Mr",
-                        "Mrs": "Mrs", "Miss": "Miss", "Master": "Master", "Lady": "Royalty"}
 
-    df['Title'] = df['Name'].map(lambda name: name.split(',')[1].split('.')[0].strip())
+    Title_Dictionary = {"Capt": "Officer", "Col": "Officer",
+                        "Major": "Officer", "Jonkheer": "Royalty",
+                        "Don": "Royalty", "Sir": "Royalty",
+                        "Dr": "Officer", "Rev": "Officer",
+                        "the Countess": "Royalty", "Mme": "Mrs",
+                        "Mlle": "Miss", "Ms": "Mrs", "Mr": "Mr",
+                        "Mrs": "Mrs", "Miss": "Miss",
+                        "Master": "Master", "Lady": "Royalty"}
+
+    df['Title'] = df['Name'].map(lambda name:
+                                 name.split(',')[1].split('.')[0].strip())
     print(df["Title"].isnull().sum())
 
     new_df = get_status(df, Title_Dictionary)
@@ -43,7 +49,8 @@ def create_new_features(clean_df):
         eng_df['Status'] = le.fit_transform(eng_df['Status'])
 
         # Keep only these columns for modeling
-        X_cols = ['Passenger_Class', 'Sex', 'SibSp', 'Parch', 'Fare', 'Title', 'Status']
+        X_cols = ['Passenger_Class', 'Sex', 'SibSp',
+                  'Parch', 'Fare', 'Title', 'Status']
         Y_col = ["Survived"]
 
         req_df = eng_df[X_cols + Y_col].copy()
@@ -57,5 +64,3 @@ def create_new_features(clean_df):
         req_df = eng_df[X_cols + Y_col].copy()
 
     return req_df
-
-

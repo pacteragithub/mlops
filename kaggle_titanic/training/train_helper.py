@@ -29,7 +29,8 @@ def train_model(data, train_params):
     n_estimators = train_params["Random_Forest"]["n_estimators"]
 
     # Fit the model
-    clf_model = RandomForestClassifier(n_estimators=n_estimators, random_state=42)
+    clf_model = RandomForestClassifier(n_estimators=n_estimators,
+                                       random_state=42)
     clf_model.fit(data["train"]["X"], data["train"]["y"])
 
     return clf_model

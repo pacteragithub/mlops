@@ -18,12 +18,13 @@ class Env(Singleton):
 
         # Project Directory variables
         self._sources_directory_train = os.environ.get("SOURCES_DIR_TRAIN")
-        self._ingested_data_directory = os.environ.get("SAVE_INGESTED_DATA_DIR")
+        self._ingested_data_directory = \
+            os.environ.get("SAVE_INGESTED_DATA_DIR")
         self._fresh_data_ingest = os.environ.get("FRESH_DATA_INGEST")
 
         # build/release ID for local testing
         self._build_id = os.environ.get("BUILD_BUILDID")
-        self._build_uri = os.environ.get("BUILD_URI")    # Used while running on Devops
+        self._build_uri = os.environ.get("BUILD_URI")
 
         # Model Output variables
         self._model_name = os.environ.get("MODEL_NAME")

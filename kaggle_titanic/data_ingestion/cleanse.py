@@ -10,10 +10,12 @@ print(f"Root directory is {dummy1}")
 print(f"Listing files in root directory {os.listdir(dummy1)}")
 print("Cleans the raw data")
 
-# Giving a description of this file when invoked on command line like python clean.py -h
+# Gives arguments needed when invoked on command line like python clean.py -h
 parser = argparse.ArgumentParser("cleanse")
-parser.add_argument("--dataset_name", type=str, help="name of the registered dataset")
-parser.add_argument("--output_cleanse", type=str, help="cleaned data directory")
+parser.add_argument("--dataset_name",
+                    type=str, help="name of the registered dataset")
+parser.add_argument("--output_cleanse",
+                    type=str, help="cleaned data directory")
 
 # Parse the arguments
 args = parser.parse_args()
@@ -56,4 +58,3 @@ if not (step_output_path is None):
     os.makedirs(step_output_path, exist_ok=True)
     full_output_path = os.path.join(step_output_path, "cleaned.csv")
     write_df = cleaned_df.to_csv(full_output_path)
-#EOF

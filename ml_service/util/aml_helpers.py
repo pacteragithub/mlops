@@ -6,7 +6,8 @@ from azureml.core.authentication import ServicePrincipalAuthentication
 
 def get_compute(workspace, compute_name):
     """
-    Function which returns a compute object which can used for pipeline execution
+    Function which returns a compute object which
+     can used for pipeline execution
     workspace (Workspace)   : AML Workspace object
     compute_name (str)      : name of the compute target in the workspace
     return                  : Compute object
@@ -24,9 +25,11 @@ def get_compute(workspace, compute_name):
     return aml_compute
 
 
-def get_environment(workspace, environment_name, requirements_path, create_new=False):
+def get_environment(workspace, environment_name, requirements_path,
+                    create_new=False):
     """
-    Function which returns the environment object which can be attached to run context
+    Function which returns the environment object
+     which can be attached to run context
     workspace (Workspace)   : AML workspace object
     environment_name (str)  : name of the environment
     return                  : environment object
@@ -40,7 +43,8 @@ def get_environment(workspace, environment_name, requirements_path, create_new=F
                 restored_environment = environments[environment_name]
 
         if restored_environment is None or create_new:
-            new_env = Environment.from_pip_requirements(environment_name, requirements_path)
+            new_env = Environment.from_pip_requirements(environment_name,
+                                                        requirements_path)
             restored_environment = new_env
             restored_environment.register(workspace)
 
@@ -52,7 +56,8 @@ def get_environment(workspace, environment_name, requirements_path, create_new=F
         exit(1)
 
 
-def get_workspace(workspace_name, subscription_id, resource_group, spn_credentials):
+def get_workspace(workspace_name, subscription_id, resource_group,
+                  spn_credentials):
 
     # Connect to AML workspace using credentials
     aml_workspace = Workspace.get(

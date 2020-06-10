@@ -32,7 +32,8 @@ def main():
         'service_principal_id': e.app_id,
         'service_principal_password': e.app_secret,
     }
-    aml_workspace = get_workspace(e.workspace_name, e.subscription_id, e.resource_group, spn_credentials)
+    aml_workspace = get_workspace(e.workspace_name, e.subscription_id,
+                                  e.resource_group, spn_credentials)
 
     # Find the pipeline that was published by the specified build ID
     pipelines = PublishedPipeline.list(aml_workspace)
