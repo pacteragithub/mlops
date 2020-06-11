@@ -34,14 +34,14 @@ def main():
     if num_missing > 0:
         print("There are missing values in the dataset\n")
         # Printing missing value summary
-        print(f"--" * 75)
+        print("--" * 75)
         print(tmp_df.isnull().sum())
-        print(f"--" * 75)
+        print("--" * 75)
         sys.exit(1)
     else:
-        print(f"--" * 75)
+        print("--" * 75)
         print("There are no missing values in the dataset")
-        print(f"--" * 75)
+        print("--" * 75)
 
 
 if __name__ == '__main__':

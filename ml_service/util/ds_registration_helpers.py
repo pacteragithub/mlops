@@ -146,12 +146,12 @@ def create_and_register_datasets(aml_workspace, datastore_name,
                                                  folderpath_on_dstore)
 
             # Print based on status
-            print(f"--"*75)
+            print("--" * 75)
             print(f"{status.upper()}: Dataset {dataset_name}"
                   f" is uploaded to {datastore_name}"
                   f" on folder {folderpath_on_dstore}"
                   f" and registered on workspace {aml_workspace.name}")
-            print(f"--" * 75)
+            print("--" * 75)
         else:
             print(f"Dataset {dataset_name} is already available"
                   f" on datastore {datastore_name}\n"
