@@ -1,13 +1,14 @@
 import numpy
 import joblib
 import os
+import json
 # import pandas as pd
 # from datetime import datetime
 from azureml.core.model import Model
-from inference_schema.schema_decorators \
-    import input_schema, output_schema
-from inference_schema.parameter_types.numpy_parameter_type \
-    import NumpyParameterType
+# from inference_schema.schema_decorators \
+#     import input_schema, output_schema
+# from inference_schema.parameter_types.numpy_parameter_type \
+#     import NumpyParameterType
 # from azure.storage.blob import BlobServiceClient
 
 
@@ -75,9 +76,9 @@ def init():
     model = joblib.load(model_path)
 
 
-input_sample = numpy.array([[3, 0, 1, 0, 7.25],
-                            [1, 1, 1, 0, 53.1]])
-output_sample = numpy.array([0, 1])
+# input_sample = numpy.array([[3, 0, 1, 0, 7.25],
+#                             [1, 1, 1, 0, 53.1]])
+# output_sample = numpy.array([0, 1])
 
 # more features
 # input_sample = numpy.array([[3, 0, 1, 0, 7.25, 11, 2],
@@ -88,9 +89,13 @@ output_sample = numpy.array([0, 1])
 # Inference_schema generates a schema for your web service
 # It then creates an OpenAPI (Swagger) specification for the web service
 # at http://<scoring_base_url>/swagger.json
-@input_schema('data', NumpyParameterType(input_sample))
-@output_schema(NumpyParameterType(output_sample))
-def run(data, request_headers):
+# @input_schema('data', NumpyParameterType(input_sample))
+# @output_schema(NumpyParameterType(output_sample))
+def run(raw_data, request_headers):
+
+    # Loading data from json
+    data = json.loads(raw_data)['data']
+    data = numpy.array(data)
     result = model.predict(data)
 
     # Demonstrate how we can log custom data into the Application Insights
