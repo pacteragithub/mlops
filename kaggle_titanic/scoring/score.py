@@ -134,6 +134,6 @@ def run(raw_data, request_headers):
 if __name__ == "__main__":
     # Test scoring
     init()
-    test_row = '{"data": [[3, 0, 1, 0, 7.25],[1, 1, 1, 0, 53.1]]}'
-    prediction = run(test_row, {})
-    print("Test result: ", prediction)
+    # test_row = '{"data": [[3, 0, 1, 0, 7.25],[1, 1, 1, 0, 53.1]]}'
+    # prediction = run(test_row, {})
+    # print("Test result: ", prediction)
