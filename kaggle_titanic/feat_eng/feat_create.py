@@ -39,7 +39,7 @@ def create_new_features(clean_df):
     clean_df['Sex'] = clean_df['Sex'].map(genders)
 
     # use engineered features
-    use_eng_features = False
+    use_eng_features = True
 
     if use_eng_features:
         # Engineered features
