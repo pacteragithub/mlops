@@ -37,4 +37,4 @@ feateng_df = create_new_features(cleansed_df)
 if not (step_output_path is None):
     os.makedirs(step_output_path, exist_ok=True)
     full_output_path = os.path.join(step_output_path, "feateng_data.csv")
-    write_df = feateng_df.to_csv(full_output_path)
+    write_df = feateng_df.to_csv(full_output_path, index=False)
