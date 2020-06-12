@@ -29,7 +29,7 @@ def write_file_to_local(dataset_name, req_df, data_directory):
 
     try:
         # Writing to local
-        req_df.to_csv(req_file_path)
+        req_df.to_csv(req_file_path, index=False)
 
         # if write is successful, Append the file path to the list
         full_file_path = req_file_path
