@@ -79,6 +79,11 @@ input_sample = numpy.array([[3, 0, 1, 0, 7.25],
                             [1, 1, 1, 0, 53.1]])
 output_sample = numpy.array([0, 1])
 
+# more features
+# input_sample = numpy.array([[3, 0, 1, 0, 7.25, 11, 2],
+#                             [1, 1, 1, 0, 53.1, 12, 3]])
+# output_sample = numpy.array([0, 1])
+
 
 # Inference_schema generates a schema for your web service
 # It then creates an OpenAPI (Swagger) specification for the web service

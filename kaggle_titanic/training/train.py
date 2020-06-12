@@ -51,7 +51,7 @@ run.input_datasets["training_data"] = feateng_data
 run.parent.tag("dataset_id", value=feateng_data.id)
 
 # Split the data into train and test
-X_cols = ['Passenger_Class', 'Sex', 'SibSp', 'Parch', 'Fare']
+X_cols = [item for item in list(feateng_df.columns) if item != "Survived"]
 target_col = "Survived"
 data = split_data(feateng_df, X_cols, target_col)
 
