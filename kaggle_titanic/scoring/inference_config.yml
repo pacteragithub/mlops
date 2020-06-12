@@ -1,4 +1,8 @@
 entryScript: score.py
+environment:
+  environmentVariables:
+      LOGS_CONTAINER: $LOGS_CONTAINER
+      CONNECTION_STRING: $CONNECTION_STRING
 runtime: python
 condaFile: ../conda_dependencies.yml
 extraDockerfileSteps:
